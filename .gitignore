@@ -1,0 +1,13 @@
+# Terraform files
+.terraform
+*.lock*
+*.tfstate*
+*.tfvars
+*override.tf*
+*.log
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
