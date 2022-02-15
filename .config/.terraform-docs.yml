@@ -1,0 +1,29 @@
+formatter: markdown table
+
+output:
+  file: README.md
+
+header-from: .config/header.md
+footer-from: .config/footer.md
+
+content: |-
+  {{ .Header }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
+
+  {{ .Requirements }}
+
+  {{ .Modules }}
+
+  {{ .Resources }}
+
+  {{ .Footer }}
+
+sort:
+  enabled: true
+  by: required
+
+settings:
+  hide-empty: true
