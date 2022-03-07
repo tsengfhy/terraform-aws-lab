@@ -4,12 +4,11 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 3.0"
     }
-  }
 
-  backend "s3" {
-    key = "lab/terraform.tfstate"
+    local = {
+      source = "hashicorp/local"
+    }
   }
-
   required_version = "~> 1.1.0"
 }
 
