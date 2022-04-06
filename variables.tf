@@ -12,3 +12,8 @@ variable "create_cloudfront" {
   type    = bool
   default = false
 }
+
+variable "create_ecs" {
+  type    = bool
+  default = false
+}
