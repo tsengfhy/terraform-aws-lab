@@ -17,6 +17,11 @@ resource "aws_iam_role" "ecs_task" {
   name = "ServiceRoleECSTask"
 
   assume_role_policy = data.aws_iam_policy_document.ecs_tasks_assume_role.json
+
+  inline_policy {
+    name   = "SQSReadWrite"
+    policy = data.aws_iam_policy_document.sqs_read_write.json
+  }
 }
 
 resource "aws_iam_role" "batch" {

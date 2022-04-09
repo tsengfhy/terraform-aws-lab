@@ -48,3 +48,17 @@ data "aws_iam_policy_document" "secrets_manager_read_only" {
     resources = ["arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.this.account_id}:key/*"]
   }
 }
+
+data "aws_iam_policy_document" "sqs_read_write" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:GetQueueUrl",
+      "sqs:GetQueueAttributes",
+      "sqs:SendMessage",
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+    ]
+    resources = ["arn:aws:sqs:${data.aws_region.current.name}:${data.aws_caller_identity.this.account_id}:*"]
+  }
+}
