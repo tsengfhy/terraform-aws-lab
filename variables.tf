@@ -17,3 +17,8 @@ variable "create_ecs" {
   type    = bool
   default = false
 }
+
+variable "create_batch" {
+  type    = bool
+  default = false
+}
