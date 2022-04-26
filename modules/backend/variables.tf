@@ -8,11 +8,6 @@ variable "default_tags" {
   default = {}
 }
 
-variable "environment" {
-  type    = string
-  default = "default"
-}
-
 variable "s3_kms_key_id" {
   type    = string
   default = "alias/aws/s3"

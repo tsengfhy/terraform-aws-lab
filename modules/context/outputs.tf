@@ -1,3 +1,7 @@
+output "global_prefix" {
+  value = local.global_prefix
+}
+
 output "prefix" {
   value = local.prefix
 }

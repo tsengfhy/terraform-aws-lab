@@ -1,9 +1,13 @@
 resource "aws_s3_bucket" "log" {
   count         = var.create_log_bucket ? 1 : 0
-  bucket        = "${module.context.prefix}-logs"
+  bucket        = "${module.context.global_prefix}-logs"
   force_destroy = true
 
   tags = module.context.tags
+
+  lifecycle {
+    ignore_changes = [grant]
+  }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "log" {
@@ -13,6 +17,25 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "log" {
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "log" {
+  count  = var.create_log_bucket ? 1 : 0
+  bucket = one(aws_s3_bucket.log).id
+
+  rule {
+    id     = "Log Bucket Lifecycle"
+    status = "Enabled"
+
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+
+    expiration {
+      days = 180
     }
   }
 }
@@ -37,6 +60,10 @@ resource "aws_s3_bucket_policy" "log" {
   count  = var.create_log_bucket ? 1 : 0
   bucket = one(aws_s3_bucket.log).id
   policy = one(data.aws_iam_policy_document.log).json
+
+  lifecycle {
+    ignore_changes = [policy]
+  }
 }
 
 data "aws_iam_policy_document" "log" {
@@ -46,34 +73,17 @@ data "aws_iam_policy_document" "log" {
     sid       = "Require encrypted transport"
     effect    = "Deny"
     actions   = ["s3:*"]
-    resources = ["arn:aws:s3:::${module.context.prefix}-logs/*"]
+    resources = ["arn:aws:s3:::${module.context.global_prefix}-logs/*"]
+
     condition {
       test     = "Bool"
       variable = "aws:SecureTransport"
       values   = [false]
     }
+
     principals {
       type        = "*"
       identifiers = ["*"]
-    }
-  }
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "log" {
-  count  = var.create_log_bucket ? 1 : 0
-  bucket = one(aws_s3_bucket.log).id
-
-  rule {
-    id     = "Log Bucket Lifecycle"
-    status = "Enabled"
-
-    transition {
-      days          = 30
-      storage_class = "STANDARD_IA"
-    }
-
-    expiration {
-      days = 180
     }
   }
 }

@@ -58,8 +58,8 @@ resource "aws_ecs_task_definition" "this" {
         options = {
           awslogs-create-group  = "true"
           awslogs-region        = data.aws_region.current.name
-          awslogs-group         = "/ecs/${var.environment}"
-          awslogs-stream-prefix = var.artifact_id
+          awslogs-group         = "/aws/ecs/${var.environment}/${var.artifact_id}"
+          awslogs-stream-prefix = "ecs"
         }
       }
     }

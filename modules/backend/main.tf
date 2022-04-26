@@ -1,7 +1,7 @@
 module "context" {
   source = "../context"
 
-  environment = var.environment
+  environment = local.environment
 }
 
 resource "local_file" "backend_config" {

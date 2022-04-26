@@ -1,3 +1,7 @@
+locals {
+  environment = terraform.workspace
+}
+
 data "aws_region" "current" {}
 
 data "aws_kms_key" "s3" {

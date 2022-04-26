@@ -1,3 +1,9 @@
+module "context" {
+  source = "./modules/context"
+
+  environment = local.environment
+}
+
 module "vpc" {
   source = "./modules/vpc"
 

@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "backend" {
-  bucket        = "${module.context.prefix}-terraform-backend"
+  bucket        = "${module.context.global_prefix}-terraform-backend"
   force_destroy = true
 
   tags = module.context.tags
@@ -59,12 +59,14 @@ data "aws_iam_policy_document" "backend" {
     sid       = "Require encrypted transport"
     effect    = "Deny"
     actions   = ["s3:*"]
-    resources = ["arn:aws:s3:::${module.context.prefix}-terraform-backend/*"]
+    resources = ["arn:aws:s3:::${module.context.global_prefix}-terraform-backend/*"]
+
     condition {
       test     = "Bool"
       variable = "aws:SecureTransport"
       values   = [false]
     }
+
     principals {
       type        = "*"
       identifiers = ["*"]

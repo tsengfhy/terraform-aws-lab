@@ -73,8 +73,8 @@ resource "aws_batch_job_definition" "this" {
       options = {
         awslogs-create-group  = "true"
         awslogs-region        = data.aws_region.current.name
-        awslogs-group         = "/batch/${var.environment}"
-        awslogs-stream-prefix = each.key
+        awslogs-group         = "/aws/batch/${var.environment}/${each.key}"
+        awslogs-stream-prefix = "batch"
       }
     }
   })
