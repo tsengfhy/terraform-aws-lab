@@ -14,7 +14,7 @@ resource "aws_security_group" "job" {
     protocol        = "tcp"
     from_port       = 443
     to_port         = 443
-    prefix_list_ids = [data.aws_vpc_endpoint.s3.prefix_list_id]
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.s3.id]
   }
 
   tags = module.context.tags

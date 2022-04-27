@@ -1,3 +1,16 @@
+resource "aws_iam_instance_profile" "ssm_managed_instance" {
+  name = "ServiceRoleSSMManagedInstance"
+
+  role = aws_iam_role.ssm_managed_instance.name
+}
+
+resource "aws_iam_role" "ssm_managed_instance" {
+  name = "ServiceRoleSSMManagedInstance"
+
+  assume_role_policy  = data.aws_iam_policy_document.ec2_assume_role.json
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
+}
+
 resource "aws_iam_role" "ecs_task_execution" {
   name = "ServiceRoleECSTaskExecution"
 

@@ -37,3 +37,8 @@ variable "key_pair_name" {
   type    = string
   default = null
 }
+
+variable "bastion_instance_profile" {
+  type    = string
+  default = null
+}

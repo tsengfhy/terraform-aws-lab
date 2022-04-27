@@ -8,8 +8,14 @@ locals {
   gateway_endpoints = ["s3", "dynamodb"]
 }
 
+data "aws_region" "current" {}
+
 data "aws_availability_zones" "available" {
   state = "available"
+}
+
+data "aws_ec2_managed_prefix_list" "s3" {
+  name = "com.amazonaws.${data.aws_region.current.name}.s3"
 }
 
 data "aws_ami" "bastion" {

@@ -19,9 +19,8 @@ data "aws_subnet_ids" "private" {
   tags   = var.private_subnet_tags
 }
 
-data "aws_vpc_endpoint" "s3" {
-  vpc_id       = var.vpc_id
-  service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
+data "aws_ec2_managed_prefix_list" "s3" {
+  name = "com.amazonaws.${data.aws_region.current.name}.s3"
 }
 
 data "aws_kms_key" "ecr" {

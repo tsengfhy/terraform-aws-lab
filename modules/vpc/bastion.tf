@@ -5,6 +5,7 @@ resource "aws_spot_instance_request" "bastion" {
   subnet_id            = module.vpc.public_subnets[0]
   security_groups      = [one(aws_security_group.bastion).id]
   key_name             = var.key_pair_name
+  iam_instance_profile = var.bastion_instance_profile
   wait_for_fulfillment = true
 
   tags = module.context.tags
@@ -35,6 +36,13 @@ resource "aws_security_group" "bastion" {
     from_port   = -1
     to_port     = -1
     cidr_blocks = [var.vpc_cidr]
+  }
+
+  egress {
+    protocol        = "tcp"
+    from_port       = 443
+    to_port         = 443
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.s3.id]
   }
 
   tags = module.context.tags

@@ -7,7 +7,9 @@ module "context" {
 module "vpc" {
   source = "./modules/vpc"
 
-  environment = local.environment
+  environment              = local.environment
+  bastion_instance_profile = aws_iam_instance_profile.ssm_managed_instance.name
+
   endpoints = local.create_endpoints ? [
     "ecr.api",
     "ecr.dkr",
@@ -27,7 +29,6 @@ module "cloudfront" {
 
 module "ecs" {
   depends_on = [
-    module.vpc,
     aws_iam_role.ecs_task_execution,
     aws_iam_role.ecs_task
   ]
@@ -45,7 +46,6 @@ module "ecs" {
 
 module "batch" {
   depends_on = [
-    module.vpc,
     aws_iam_role.batch,
     aws_iam_role.event_target_batch,
     aws_iam_role.ecs_task_execution,
