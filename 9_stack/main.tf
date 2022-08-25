@@ -1,11 +1,11 @@
 module "context" {
-  source = "./modules/context"
+  source = "modulesontext"
 
   environment = local.environment
 }
 
 module "vpc" {
-  source = "./modules/vpc"
+  source = "modulespc"
 
   environment              = local.environment
   bastion_instance_profile = aws_iam_instance_profile.ssm_managed_instance.name
@@ -21,7 +21,7 @@ module "vpc" {
 
 module "cloudfront" {
   count  = var.create_cloudfront ? 1 : 0
-  source = "./modules/cloudfront"
+  source = "modulesloudfront"
 
   environment     = local.environment
   log_bucket_name = local.lob_bucket_name
@@ -34,7 +34,7 @@ module "ecs" {
   ]
 
   count  = var.create_ecs ? 1 : 0
-  source = "./modules/ecs"
+  source = "modulescs"
 
   environment         = local.environment
   vpc_id              = module.vpc.vpc_id
@@ -53,7 +53,7 @@ module "batch" {
   ]
 
   count  = var.create_batch ? 1 : 0
-  source = "./modules/batch"
+  source = "modulesatch"
 
   environment             = local.environment
   vpc_id                  = module.vpc.vpc_id

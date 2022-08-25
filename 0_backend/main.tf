@@ -1,5 +1,5 @@
 module "context" {
-  source = "../context"
+  source = "../9_stack/modules/context"
 
   environment = local.environment
 }
