@@ -8,14 +8,14 @@ variable "default_tags" {
   default = {}
 }
 
+variable "prefix" {
+  type    = string
+  default = ""
+}
+
 variable "s3_kms_key_id" {
   type    = string
   default = "alias/aws/s3"
-}
-
-variable "create_lock_dynamodb" {
-  type    = bool
-  default = true
 }
 
 variable "create_log_bucket" {
@@ -25,5 +25,5 @@ variable "create_log_bucket" {
 
 variable "backend_config_filename" {
   type    = string
-  default = null
+  default = "backend-config.tfvars"
 }

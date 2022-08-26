@@ -1,9 +1,7 @@
 resource "aws_s3_bucket" "log" {
   count         = var.create_log_bucket ? 1 : 0
-  bucket        = "${module.context.global_prefix}-logs"
+  bucket        = "${local.prefix}${data.aws_caller_identity.current.account_id}-logs"
   force_destroy = true
-
-  tags = module.context.tags
 
   lifecycle {
     ignore_changes = [grant]
@@ -60,20 +58,33 @@ resource "aws_s3_bucket_policy" "log" {
   count  = var.create_log_bucket ? 1 : 0
   bucket = one(aws_s3_bucket.log).id
   policy = one(data.aws_iam_policy_document.log).json
-
-  lifecycle {
-    ignore_changes = [policy]
-  }
 }
 
 data "aws_iam_policy_document" "log" {
   count = var.create_log_bucket ? 1 : 0
 
   statement {
-    sid       = "Require encrypted transport"
-    effect    = "Deny"
-    actions   = ["s3:*"]
-    resources = ["arn:aws:s3:::${module.context.global_prefix}-logs/*"]
+    sid     = "Allow write log"
+    effect  = "Allow"
+    actions = ["s3:PutObject"]
+    resources = [
+      "${aws_s3_bucket.log[0].arn}/*"
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["logging.s3.amazonaws.com"]
+    }
+  }
+
+  statement {
+    sid     = "Require encrypted transport"
+    effect  = "Deny"
+    actions = ["s3:*"]
+    resources = [
+      aws_s3_bucket.log[0].arn,
+      "${aws_s3_bucket.log[0].arn}/*"
+    ]
 
     condition {
       test     = "Bool"

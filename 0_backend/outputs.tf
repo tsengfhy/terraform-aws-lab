@@ -7,7 +7,7 @@ output "bucket" {
 }
 
 output "dynamodb_table" {
-  value = try(one(aws_dynamodb_table.lock).name, "")
+  value = aws_dynamodb_table.lock.name
 }
 
 output "log_bucket" {

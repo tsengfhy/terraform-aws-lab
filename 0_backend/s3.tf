@@ -1,8 +1,6 @@
 resource "aws_s3_bucket" "backend" {
-  bucket        = "${module.context.global_prefix}-terraform-backend"
+  bucket        = "${local.prefix}${data.aws_caller_identity.current.account_id}-terraform-backend"
   force_destroy = true
-
-  tags = module.context.tags
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "backend" {
@@ -29,7 +27,7 @@ resource "aws_s3_bucket_logging" "backend" {
   bucket = aws_s3_bucket.backend.id
 
   target_bucket = one(aws_s3_bucket.log).id
-  target_prefix = "terraform-backend/"
+  target_prefix = "backend/"
 }
 
 resource "aws_s3_bucket_public_access_block" "backend" {
@@ -56,10 +54,13 @@ resource "aws_s3_bucket_policy" "backend" {
 
 data "aws_iam_policy_document" "backend" {
   statement {
-    sid       = "Require encrypted transport"
-    effect    = "Deny"
-    actions   = ["s3:*"]
-    resources = ["arn:aws:s3:::${module.context.global_prefix}-terraform-backend/*"]
+    sid     = "Require encrypted transport"
+    effect  = "Deny"
+    actions = ["s3:*"]
+    resources = [
+      aws_s3_bucket.backend.arn,
+      "${aws_s3_bucket.backend.arn}/*",
+    ]
 
     condition {
       test     = "Bool"
