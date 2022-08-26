@@ -2,7 +2,6 @@
 .terraform
 *.lock*
 *.tfstate*
-*.tfvars
 *override.tf*
 *.log
 
