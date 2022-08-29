@@ -28,6 +28,11 @@ jobs:
         run: ../.github/scripts/deploy.sh
         env:
           WORKSPACE: global
+      - name: Deploy Bootstrap
+        working-directory: ./1_bootstrap
+        run: ../.github/scripts/deploy.sh
+        env:
+          WORKSPACE: global
 
 
 
