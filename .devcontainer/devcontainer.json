@@ -1,0 +1,25 @@
+{
+	"name": "Terraform",
+
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": { 
+			"TERRAFORM_VERSION": "1.1.9"
+		}
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"eamodio.gitlens",
+				"k--kato.intellij-idea-keybindings",
+				"hashicorp.terraform",
+				"Remisa.shellman"
+			]
+		}
+	},
+
+	"postCreateCommand": "",
+
+	"remoteUser": "codespace"
+}
