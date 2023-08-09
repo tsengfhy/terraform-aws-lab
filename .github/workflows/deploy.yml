@@ -24,12 +24,12 @@ jobs:
         with:
           terraform_version: 1.1.9
       - name: Deploy Backend
-        working-directory: ./0_backend
+        working-directory: ./backend
         run: ../.github/scripts/deploy.sh
         env:
           WORKSPACE: global
       - name: Deploy Bootstrap
-        working-directory: ./1_bootstrap
+        working-directory: ./bootstrap
         run: ../.github/scripts/deploy.sh
         env:
           WORKSPACE: global
