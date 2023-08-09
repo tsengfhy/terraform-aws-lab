@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "backend" {
-  bucket        = "${local.prefix}${data.aws_caller_identity.current.account_id}-terraform-backend"
+  bucket        = "${local.workspace}-${data.aws_caller_identity.current.account_id}-terraform-backend"
   force_destroy = true
 }
 

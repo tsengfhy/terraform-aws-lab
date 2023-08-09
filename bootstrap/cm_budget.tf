@@ -1,9 +1,9 @@
-resource "aws_budgets_budget" "monthly_cost" {
-  name         = "${local.prefix}budget-monthly-cost"
+resource "aws_budgets_budget" "cost_monthly" {
+  name         = "${local.workspace}-budget-cost-monthly"
   budget_type  = "COST"
   time_unit    = "MONTHLY"
   limit_unit   = "USD"
-  limit_amount = var.cost_limit_amont
+  limit_amount = var.cost_limit_amount
 
   dynamic "notification" {
     for_each = length(var.notification_email_addresses) > 0 ? [0] : []
@@ -18,8 +18,8 @@ resource "aws_budgets_budget" "monthly_cost" {
   }
 }
 
-resource "aws_budgets_budget" "bandwidth_usage" {
-  name         = "${local.prefix}budget-bandwidth-usage"
+resource "aws_budgets_budget" "usage_bandwidth" {
+  name         = "${local.workspace}-budget-usage-bandwidth"
   budget_type  = "USAGE"
   time_unit    = "MONTHLY"
   limit_unit   = "GB"
@@ -28,7 +28,7 @@ resource "aws_budgets_budget" "bandwidth_usage" {
   cost_filter {
     name = "UsageType"
     values = [
-      "${join("", [for item in split("-", "ap-northeast-1") : upper(substr(item, 0, length(item) == 2 ? 2 : 1))])}-DataTransfer-Out-Bytes",
+      "${join("", [for item in split("-", data.aws_region.current.name) : upper(substr(item, 0, length(item) == 2 ? 2 : 1))])}-DataTransfer-Out-Bytes",
     ]
   }
 
@@ -38,7 +38,7 @@ resource "aws_budgets_budget" "bandwidth_usage" {
     content {
       comparison_operator        = "GREATER_THAN"
       threshold_type             = "PERCENTAGE"
-      threshold                  = "100"
+      threshold                  = "90"
       notification_type          = "ACTUAL"
       subscriber_email_addresses = var.notification_email_addresses
     }

@@ -8,9 +8,14 @@ variable "default_tags" {
   default = {}
 }
 
-variable "prefix" {
+variable "notification_email_addresses" {
+  type    = list(string)
+  default = []
+}
+
+variable "workspace_tag_key" {
   type    = string
-  default = ""
+  default = "Workspace"
 }
 
 variable "workspaces" {
@@ -18,22 +23,12 @@ variable "workspaces" {
   default = []
 }
 
-variable "worksapce_tag_key" {
-  type = string
-  default = "Environment"
-}
-
-variable "notification_email_addresses" {
-  type    = list(string)
-  default = []
-}
-
-variable "cost_limit_amont" {
+variable "cost_limit_amount" {
   type    = string
   default = "1"
 }
 
-variable "cost_anomaly_amont" {
+variable "cost_anomaly_amount" {
   type    = string
   default = "1"
 }

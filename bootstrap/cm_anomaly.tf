@@ -1,12 +1,12 @@
 resource "aws_ce_anomaly_monitor" "service" {
-  name              = "${local.prefix}anomaly-monitor-service"
+  name              = "${local.workspace}-anomaly-monitor-service"
   monitor_type      = "DIMENSIONAL"
   monitor_dimension = "SERVICE"
 }
 
 resource "aws_ce_anomaly_monitor" "workspace" {
   for_each     = toset(var.workspaces)
-  name         = "${local.prefix}anomaly-monitor-workspace-${each.key}"
+  name         = "${local.workspace}-anomaly-monitor-workspace-${each.key}"
   monitor_type = "CUSTOM"
 
   monitor_specification = jsonencode({
@@ -25,9 +25,16 @@ resource "aws_ce_anomaly_monitor" "workspace" {
 
 resource "aws_ce_anomaly_subscription" "daily" {
   count     = length(var.notification_email_addresses) > 0 ? 1 : 0
-  name      = "${local.prefix}anomaly-subscription-daily"
+  name      = "${local.workspace}-anomaly-subscription-daily"
   frequency = "DAILY"
-  threshold = var.cost_anomaly_amont
+
+  threshold_expression {
+    dimension {
+      key           = "ANOMALY_TOTAL_IMPACT_ABSOLUTE"
+      match_options = ["GREATER_THAN_OR_EQUAL"]
+      values        = [var.cost_anomaly_amount]
+    }
+  }
 
   monitor_arn_list = flatten([
     [aws_ce_anomaly_monitor.service.arn],

@@ -8,11 +8,6 @@ variable "default_tags" {
   default = {}
 }
 
-variable "prefix" {
-  type    = string
-  default = ""
-}
-
 variable "s3_kms_key_id" {
   type    = string
   default = "alias/aws/s3"

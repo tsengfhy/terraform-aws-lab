@@ -1,10 +1,10 @@
 resource "aws_ce_cost_allocation_tag" "workspace" {
-  tag_key = var.worksapce_tag_key
+  tag_key = var.workspace_tag_key
   status  = "Active"
 }
 
 resource "aws_ce_cost_category" "workspace" {
-  name          = "${local.prefix}category-workspace"
+  name          = "${local.workspace}-cost-category-workspace"
   rule_version  = "CostCategoryExpression.v1"
   default_value = "shared"
 

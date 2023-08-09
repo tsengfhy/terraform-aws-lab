@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "log" {
   count         = var.create_log_bucket ? 1 : 0
-  bucket        = "${local.prefix}${data.aws_caller_identity.current.account_id}-logs"
+  bucket        = "${local.workspace}-${data.aws_caller_identity.current.account_id}-logs"
   force_destroy = true
 
   lifecycle {
