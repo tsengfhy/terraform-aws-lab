@@ -1,8 +1,3 @@
-resource "aws_ce_cost_allocation_tag" "workspace" {
-  tag_key = var.workspace_tag_key
-  status  = "Active"
-}
-
 resource "aws_ce_cost_category" "workspace" {
   name          = "${local.workspace}-cost-category-workspace"
   rule_version  = "CostCategoryExpression.v1"
@@ -17,7 +12,7 @@ resource "aws_ce_cost_category" "workspace" {
 
       rule {
         tags {
-          key           = aws_ce_cost_allocation_tag.workspace.id
+          key           = var.workspace_tag_key
           match_options = ["EQUALS"]
           values        = [rule.value]
         }
@@ -31,7 +26,7 @@ resource "aws_ce_cost_category" "workspace" {
 
     rule {
       tags {
-        key           = aws_ce_cost_allocation_tag.workspace.id
+        key           = var.workspace_tag_key
         match_options = ["EQUALS"]
         values        = [local.workspace]
       }
