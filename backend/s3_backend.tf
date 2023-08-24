@@ -3,6 +3,14 @@ resource "aws_s3_bucket" "backend" {
   force_destroy = true
 }
 
+resource "aws_s3_bucket_versioning" "backend" {
+  bucket = aws_s3_bucket.backend.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "backend" {
   bucket = aws_s3_bucket.backend.id
 
@@ -11,14 +19,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "backend" {
       sse_algorithm     = "aws:kms"
       kms_master_key_id = data.aws_kms_key.s3.arn
     }
-  }
-}
 
-resource "aws_s3_bucket_versioning" "backend" {
-  bucket = aws_s3_bucket.backend.id
-
-  versioning_configuration {
-    status = "Enabled"
+    bucket_key_enabled = true
   }
 }
 
@@ -39,14 +41,6 @@ resource "aws_s3_bucket_public_access_block" "backend" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_ownership_controls" "backend" {
-  bucket = aws_s3_bucket.backend.id
-
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
-
 resource "aws_s3_bucket_policy" "backend" {
   bucket = aws_s3_bucket.backend.id
   policy = data.aws_iam_policy_document.backend.json
@@ -54,7 +48,7 @@ resource "aws_s3_bucket_policy" "backend" {
 
 data "aws_iam_policy_document" "backend" {
   statement {
-    sid     = "Require encrypted transport"
+    sid     = "Require secure transport"
     effect  = "Deny"
     actions = ["s3:*"]
     resources = [
