@@ -39,21 +39,23 @@ data "aws_iam_policy_document" "log" {
   count = var.create_log_bucket ? 1 : 0
 
   statement {
-    sid     = "Allow S3"
-    effect  = "Allow"
-    actions = ["s3:PutObject"]
+    effect = "Allow"
+    actions = [
+      "s3:GetBucketAcl",
+      "s3:PutObject",
+    ]
     resources = [
+      one(aws_s3_bucket.log).arn,
       "${one(aws_s3_bucket.log).arn}/*"
     ]
 
     principals {
       type        = "Service"
-      identifiers = ["logging.s3.amazonaws.com"]
+      identifiers = formatlist("%s.amazonaws.com", var.log_bucket_support_services)
     }
   }
 
   statement {
-    sid     = "Require secure transport"
     effect  = "Deny"
     actions = ["s3:*"]
     resources = [
@@ -61,15 +63,15 @@ data "aws_iam_policy_document" "log" {
       "${one(aws_s3_bucket.log).arn}/*"
     ]
 
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
     condition {
       test     = "Bool"
       variable = "aws:SecureTransport"
       values   = [false]
-    }
-
-    principals {
-      type        = "*"
-      identifiers = ["*"]
     }
   }
 }

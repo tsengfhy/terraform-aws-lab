@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "backend" {
   bucket        = "${local.workspace}-${data.aws_caller_identity.current.account_id}-terraform-backend"
-  force_destroy = true
+  force_destroy = false
 }
 
 resource "aws_s3_bucket_versioning" "backend" {
@@ -25,11 +25,12 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "backend" {
 }
 
 resource "aws_s3_bucket_logging" "backend" {
-  count  = var.create_log_bucket ? 1 : 0
+  count = var.create_log_bucket ? 1 : 0
+
   bucket = aws_s3_bucket.backend.id
 
   target_bucket = one(aws_s3_bucket.log).id
-  target_prefix = "backend/"
+  target_prefix = "AWSLogs/${data.aws_caller_identity.current.account_id}/S3/${aws_s3_bucket.backend.id}"
 }
 
 resource "aws_s3_bucket_public_access_block" "backend" {
@@ -48,7 +49,6 @@ resource "aws_s3_bucket_policy" "backend" {
 
 data "aws_iam_policy_document" "backend" {
   statement {
-    sid     = "Require secure transport"
     effect  = "Deny"
     actions = ["s3:*"]
     resources = [
@@ -56,15 +56,15 @@ data "aws_iam_policy_document" "backend" {
       "${aws_s3_bucket.backend.arn}/*",
     ]
 
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
     condition {
       test     = "Bool"
       variable = "aws:SecureTransport"
       values   = [false]
-    }
-
-    principals {
-      type        = "*"
-      identifiers = ["*"]
     }
   }
 }

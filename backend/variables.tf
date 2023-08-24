@@ -18,6 +18,11 @@ variable "create_log_bucket" {
   default = false
 }
 
+variable "log_bucket_support_services" {
+  type    = list(string)
+  default = ["logging.s3"]
+}
+
 variable "backend_config_filename" {
   type    = string
   default = "backend-config.tfvars"
