@@ -28,6 +28,16 @@ resource "aws_s3_bucket_public_access_block" "log" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_ownership_controls" "log" {
+  count = var.create_log_bucket ? 1 : 0
+
+  bucket = one(aws_s3_bucket.log).id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
 resource "aws_s3_bucket_policy" "log" {
   count = var.create_log_bucket ? 1 : 0
 

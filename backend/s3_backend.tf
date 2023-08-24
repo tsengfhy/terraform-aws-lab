@@ -30,7 +30,7 @@ resource "aws_s3_bucket_logging" "backend" {
   bucket = aws_s3_bucket.backend.id
 
   target_bucket = one(aws_s3_bucket.log).id
-  target_prefix = "AWSLogs/${data.aws_caller_identity.current.account_id}/S3/${aws_s3_bucket.backend.id}"
+  target_prefix = "AWSLogs/${data.aws_caller_identity.current.account_id}/S3/${aws_s3_bucket.backend.id}/"
 }
 
 resource "aws_s3_bucket_public_access_block" "backend" {
@@ -40,6 +40,14 @@ resource "aws_s3_bucket_public_access_block" "backend" {
   ignore_public_acls      = true
   block_public_policy     = true
   restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_ownership_controls" "backend" {
+  bucket = aws_s3_bucket.backend.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
 }
 
 resource "aws_s3_bucket_policy" "backend" {
