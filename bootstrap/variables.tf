@@ -32,3 +32,13 @@ variable "cost_anomaly_amount" {
   type    = string
   default = "1"
 }
+
+variable "log_bucket_support_services" {
+  type    = list(string)
+  default = ["logging.s3"]
+}
+
+variable "log_bucket_support_buckets" {
+  type    = list(string)
+  default = []
+}

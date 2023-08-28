@@ -9,7 +9,3 @@ output "bucket" {
 output "dynamodb_table" {
   value = aws_dynamodb_table.lock.name
 }
-
-output "log_bucket" {
-  value = try(one(aws_s3_bucket.log).bucket, "")
-}

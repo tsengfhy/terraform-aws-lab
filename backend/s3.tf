@@ -24,15 +24,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "backend" {
   }
 }
 
-resource "aws_s3_bucket_logging" "backend" {
-  count = var.create_log_bucket ? 1 : 0
-
-  bucket = aws_s3_bucket.backend.id
-
-  target_bucket = one(aws_s3_bucket.log).id
-  target_prefix = "AWSLogs/${data.aws_caller_identity.current.account_id}/S3/${aws_s3_bucket.backend.id}/"
-}
-
 resource "aws_s3_bucket_public_access_block" "backend" {
   bucket = aws_s3_bucket.backend.id
 

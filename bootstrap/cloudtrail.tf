@@ -1,6 +1,6 @@
 resource "aws_cloudtrail" "default" {
   name           = "${local.workspace}-trail-default"
-  s3_bucket_name = data.aws_s3_bucket.log.id
+  s3_bucket_name = aws_s3_bucket.log.id
 
   enable_logging                = true
   is_multi_region_trail         = false

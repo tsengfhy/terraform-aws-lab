@@ -1,14 +1,10 @@
 resource "aws_s3_bucket" "log" {
-  count = var.create_log_bucket ? 1 : 0
-
   bucket        = "${local.workspace}-${data.aws_caller_identity.current.account_id}-log"
   force_destroy = true
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "log" {
-  count = var.create_log_bucket ? 1 : 0
-
-  bucket = one(aws_s3_bucket.log).id
+  bucket = aws_s3_bucket.log.id
 
   rule {
     apply_server_side_encryption_by_default {
@@ -18,9 +14,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "log" {
 }
 
 resource "aws_s3_bucket_public_access_block" "log" {
-  count = var.create_log_bucket ? 1 : 0
-
-  bucket = one(aws_s3_bucket.log).id
+  bucket = aws_s3_bucket.log.id
 
   block_public_acls       = true
   ignore_public_acls      = true
@@ -29,9 +23,7 @@ resource "aws_s3_bucket_public_access_block" "log" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "log" {
-  count = var.create_log_bucket ? 1 : 0
-
-  bucket = one(aws_s3_bucket.log).id
+  bucket = aws_s3_bucket.log.id
 
   rule {
     object_ownership = "BucketOwnerEnforced"
@@ -39,15 +31,11 @@ resource "aws_s3_bucket_ownership_controls" "log" {
 }
 
 resource "aws_s3_bucket_policy" "log" {
-  count = var.create_log_bucket ? 1 : 0
-
-  bucket = one(aws_s3_bucket.log).id
-  policy = one(data.aws_iam_policy_document.log).json
+  bucket = aws_s3_bucket.log.id
+  policy = data.aws_iam_policy_document.log.json
 }
 
 data "aws_iam_policy_document" "log" {
-  count = var.create_log_bucket ? 1 : 0
-
   statement {
     effect = "Allow"
     actions = [
@@ -55,8 +43,8 @@ data "aws_iam_policy_document" "log" {
       "s3:PutObject",
     ]
     resources = [
-      one(aws_s3_bucket.log).arn,
-      "${one(aws_s3_bucket.log).arn}/*"
+      aws_s3_bucket.log.arn,
+      "${aws_s3_bucket.log.arn}/*"
     ]
 
     principals {
@@ -69,8 +57,8 @@ data "aws_iam_policy_document" "log" {
     effect  = "Deny"
     actions = ["s3:*"]
     resources = [
-      one(aws_s3_bucket.log).arn,
-      "${one(aws_s3_bucket.log).arn}/*"
+      aws_s3_bucket.log.arn,
+      "${aws_s3_bucket.log.arn}/*"
     ]
 
     principals {
@@ -87,9 +75,7 @@ data "aws_iam_policy_document" "log" {
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "log" {
-  count = var.create_log_bucket ? 1 : 0
-
-  bucket = one(aws_s3_bucket.log).id
+  bucket = aws_s3_bucket.log.id
 
   rule {
     id     = "Log Bucket Lifecycle"
@@ -104,4 +90,19 @@ resource "aws_s3_bucket_lifecycle_configuration" "log" {
       days = 180
     }
   }
+}
+
+data "aws_s3_bucket" "selected" {
+  for_each = toset(var.log_bucket_support_buckets)
+
+  bucket = "${local.workspace}-${data.aws_caller_identity.current.account_id}-${each.key}"
+}
+
+resource "aws_s3_bucket_logging" "backend" {
+  for_each = toset(var.log_bucket_support_buckets)
+
+  bucket = data.aws_s3_bucket.selected[each.key].id
+
+  target_bucket = aws_s3_bucket.log.id
+  target_prefix = "AWSLogs/${data.aws_caller_identity.current.account_id}/S3/${data.aws_s3_bucket.selected[each.key].id}/"
 }
