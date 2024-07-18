@@ -8,9 +8,7 @@
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/aws-cli:1": {},
-		"ghcr.io/devcontainers/features/terraform:1": {
-			"version": "1.3.9"
-		},
+		"ghcr.io/devcontainers/features/terraform:1": {},
 		"ghcr.io/dhoeric/features/terraform-docs:1": {}
 	},
 	"customizations": {
