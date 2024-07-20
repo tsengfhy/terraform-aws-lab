@@ -8,17 +8,62 @@ variable "default_tags" {
   default = {}
 }
 
-variable "create_cloudfront" {
+variable "create_bastion" {
   type    = bool
   default = false
 }
 
-variable "create_ecs" {
-  type    = bool
-  default = false
+variable "domain" {
+  type    = string
+  default = null
 }
 
-variable "create_batch" {
-  type    = bool
-  default = false
+variable "services" {
+  type = map(object({
+    container_port = number
+    health_check   = string
+    priority       = optional(number)
+    path_pattern   = string
+    stickiness     = optional(bool, false)
+  }))
+  default = {}
+}
+
+variable "pages" {
+  type = map(object({
+    alias = optional(string)
+  }))
+  default = {}
+}
+
+variable "jobs" {
+  type = map(object({
+    schedule_expression = string
+  }))
+  default = {}
+}
+
+variable "buckets" {
+  type = map(object({
+    force_destroy            = optional(bool, false)
+    use_versioning           = optional(bool, false)
+    use_logging              = optional(bool, false)
+    use_transition_lifecycle = optional(bool, false)
+    transition_in_days       = optional(number, 30)
+    use_expiration_lifecycle = optional(bool, false)
+    expiration_in_days       = optional(number, 180)
+  }))
+  default = {}
+}
+
+variable "queues" {
+  type = map(object({
+    use_dlq                    = optional(bool, true)
+    max_receive_count          = optional(number, 1)
+    use_fifo                   = optional(bool, false)
+    delay_seconds              = optional(number, 0)
+    visibility_timeout_seconds = optional(number, 30)
+    message_retention_seconds  = optional(number, 345600)
+  }))
+  default = {}
 }

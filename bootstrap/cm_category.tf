@@ -1,5 +1,5 @@
 resource "aws_ce_cost_category" "workspace" {
-  name          = "${local.workspace}-cost-category-workspace"
+  name          = "${module.context.prefix}-cost-category-workspace"
   rule_version  = "CostCategoryExpression.v1"
   default_value = "shared"
 
@@ -32,4 +32,6 @@ resource "aws_ce_cost_category" "workspace" {
       }
     }
   }
+
+  tags = module.context.tags
 }

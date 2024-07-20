@@ -1,6 +1,6 @@
 resource "aws_cloudtrail" "default" {
-  name           = "${local.workspace}-trail-default"
-  s3_bucket_name = aws_s3_bucket.log.id
+  name           = "${module.context.prefix}-trail-default"
+  s3_bucket_name = module.log.id
 
   enable_logging                = true
   is_multi_region_trail         = false
@@ -10,4 +10,6 @@ resource "aws_cloudtrail" "default" {
     include_management_events = true
     read_write_type           = "WriteOnly"
   }
+
+  tags = module.context.tags
 }
