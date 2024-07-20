@@ -19,7 +19,7 @@ variable "workspace_tag_key" {
 }
 
 variable "workspaces" {
-  type    = list(string)
+  type    = set(string)
   default = []
 }
 
@@ -33,12 +33,17 @@ variable "cost_anomaly_amount" {
   default = "1"
 }
 
-variable "log_bucket_support_services" {
-  type    = list(string)
+variable "domain" {
+  type    = string
+  default = null
+}
+
+variable "log_bucket_supported_services" {
+  type    = set(string)
   default = ["logging.s3"]
 }
 
-variable "log_bucket_support_buckets" {
-  type    = list(string)
+variable "log_bucket_supported_buckets" {
+  type    = set(string)
   default = []
 }

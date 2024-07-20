@@ -12,12 +12,13 @@ resource "aws_s3_bucket_versioning" "backend" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "backend" {
-  bucket = aws_s3_bucket.backend.id
+  depends_on = [data.aws_kms_alias.s3]
+  bucket     = aws_s3_bucket.backend.id
 
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm     = "aws:kms"
-      kms_master_key_id = data.aws_kms_key.s3.arn
+      kms_master_key_id = data.aws_kms_alias.s3.name
     }
 
     bucket_key_enabled = true

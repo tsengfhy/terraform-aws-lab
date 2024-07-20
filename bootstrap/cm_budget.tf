@@ -1,5 +1,5 @@
 resource "aws_budgets_budget" "cost_monthly" {
-  name         = "${local.workspace}-budget-cost-monthly"
+  name         = "${module.context.prefix}-budget-cost-monthly"
   budget_type  = "COST"
   time_unit    = "MONTHLY"
   limit_unit   = "USD"
@@ -16,10 +16,12 @@ resource "aws_budgets_budget" "cost_monthly" {
       subscriber_email_addresses = var.notification_email_addresses
     }
   }
+
+  tags = module.context.tags
 }
 
 resource "aws_budgets_budget" "usage_bandwidth" {
-  name         = "${local.workspace}-budget-usage-bandwidth"
+  name         = "${module.context.prefix}-budget-usage-bandwidth"
   budget_type  = "USAGE"
   time_unit    = "MONTHLY"
   limit_unit   = "GB"
@@ -43,4 +45,6 @@ resource "aws_budgets_budget" "usage_bandwidth" {
       subscriber_email_addresses = var.notification_email_addresses
     }
   }
+
+  tags = module.context.tags
 }

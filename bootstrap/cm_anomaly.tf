@@ -1,12 +1,15 @@
 resource "aws_ce_anomaly_monitor" "service" {
-  name              = "${local.workspace}-anomaly-monitor-service"
+  name              = "${module.context.prefix}-anomaly-monitor-service"
   monitor_type      = "DIMENSIONAL"
   monitor_dimension = "SERVICE"
+
+  tags = module.context.tags
 }
 
 resource "aws_ce_anomaly_monitor" "workspace" {
-  for_each     = toset(var.workspaces)
-  name         = "${local.workspace}-anomaly-monitor-workspace-${each.key}"
+  for_each = var.workspaces
+
+  name         = "${module.context.prefix}-anomaly-monitor-workspace-${each.key}"
   monitor_type = "CUSTOM"
 
   monitor_specification = jsonencode({
@@ -21,11 +24,14 @@ resource "aws_ce_anomaly_monitor" "workspace" {
     Dimensions = null
     Tags       = null
   })
+
+  tags = module.context.tags
 }
 
 resource "aws_ce_anomaly_subscription" "daily" {
-  count     = length(var.notification_email_addresses) > 0 ? 1 : 0
-  name      = "${local.workspace}-anomaly-subscription-daily"
+  count = length(var.notification_email_addresses) > 0 ? 1 : 0
+
+  name      = "${module.context.prefix}-anomaly-subscription-daily"
   frequency = "DAILY"
 
   threshold_expression {
@@ -38,7 +44,7 @@ resource "aws_ce_anomaly_subscription" "daily" {
 
   monitor_arn_list = flatten([
     [aws_ce_anomaly_monitor.service.arn],
-    [for workspace in var.workspaces : aws_ce_anomaly_monitor.workspace[workspace].arn]
+    [for item in var.workspaces : aws_ce_anomaly_monitor.workspace[item].arn]
   ])
 
   dynamic "subscriber" {
@@ -49,4 +55,6 @@ resource "aws_ce_anomaly_subscription" "daily" {
       address = subscriber.value
     }
   }
+
+  tags = module.context.tags
 }
