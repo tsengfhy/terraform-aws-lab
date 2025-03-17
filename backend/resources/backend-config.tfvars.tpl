@@ -1,3 +1,3 @@
-region         = "${region}"
-bucket         = "${bucket}"
-dynamodb_table = "${dynamodb_table}"
+region       = "${region}"
+bucket       = "${bucket}"
+use_lockfile = true
