@@ -11,23 +11,6 @@ resource "aws_s3_bucket" "this" {
   tags = module.context.tags
 }
 
-resource "aws_s3_bucket_ownership_controls" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  rule {
-    object_ownership = var.object_ownership
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  block_public_acls       = true
-  ignore_public_acls      = true
-  block_public_policy     = true
-  restrict_public_buckets = true
-}
-
 resource "aws_s3_bucket_versioning" "this" {
   count = var.use_versioning ? 1 : 0
 
@@ -51,6 +34,24 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 
     bucket_key_enabled = var.use_kms ? true : false
   }
+}
+
+resource "aws_s3_bucket_logging" "this" {
+  count = var.use_logging ? 1 : 0
+
+  bucket = aws_s3_bucket.this.id
+
+  target_bucket = one(data.aws_s3_bucket.log).id
+  target_prefix = "AWSLogs/${data.aws_caller_identity.current.account_id}/S3/${aws_s3_bucket.this.id}/"
+}
+
+resource "aws_s3_bucket_public_access_block" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_policy" "this" {
@@ -82,45 +83,42 @@ data "aws_iam_policy_document" "this" {
   source_policy_documents = var.policy_documents
 }
 
+resource "aws_s3_bucket_ownership_controls" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  rule {
+    object_ownership = var.object_ownership
+  }
+}
+
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
-  count = var.use_transition_lifecycle || var.use_expiration_lifecycle ? 1 : 0
+  count = var.use_default_lifecycle ? 1 : 0
 
   bucket = aws_s3_bucket.this.id
 
   rule {
-    id     = "Bucket Lifecycle"
+    id     = "default"
     status = "Enabled"
 
-    dynamic "transition" {
-      for_each = var.use_transition_lifecycle ? [0] : []
-
-      content {
-        days          = var.transition_in_days
-        storage_class = "STANDARD_IA"
-      }
+    filter {
+      prefix = ""
     }
 
-    dynamic "expiration" {
-      for_each = var.use_expiration_lifecycle ? [0] : []
+    transition {
+      storage_class = "STANDARD_IA"
+      days          = 30
+    }
+
+    expiration {
+      days = 180
+    }
+
+    dynamic "noncurrent_version_expiration" {
+      for_each = var.use_versioning ? [0] : []
 
       content {
-        days = var.expiration_in_days
+        noncurrent_days = 30
       }
     }
   }
-}
-
-data "aws_s3_bucket" "log" {
-  count = var.use_logging ? 1 : 0
-
-  bucket = var.log_bucket_name
-}
-
-resource "aws_s3_bucket_logging" "this" {
-  count = var.use_logging ? 1 : 0
-
-  bucket = aws_s3_bucket.this.id
-
-  target_bucket = one(data.aws_s3_bucket.log).id
-  target_prefix = "AWSLogs/${data.aws_caller_identity.current.account_id}/S3/${aws_s3_bucket.this.id}/"
 }

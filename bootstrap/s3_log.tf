@@ -3,14 +3,13 @@ module "log" {
 
   workspace = local.workspace
 
-  name                     = "log"
-  force_destroy            = true
-  object_ownership         = "BucketOwnerPreferred"
-  use_versioning           = false
-  use_kms                  = false
-  policy_documents         = [data.aws_iam_policy_document.log.json]
-  use_transition_lifecycle = true
-  use_expiration_lifecycle = true
+  name                  = "log"
+  force_destroy         = true
+  use_versioning        = false
+  use_kms               = false
+  policy_documents      = [data.aws_iam_policy_document.log.json]
+  object_ownership      = "BucketOwnerPreferred"
+  use_default_lifecycle = true
 }
 
 data "aws_iam_policy_document" "log" {

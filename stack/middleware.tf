@@ -4,15 +4,12 @@ module "s3" {
 
   workspace = local.workspace
 
-  name                     = each.key
-  force_destroy            = each.value.force_destroy
-  use_versioning           = each.value.use_versioning
-  use_logging              = each.value.use_logging
-  log_bucket_name          = data.aws_s3_bucket.log.bucket
-  use_transition_lifecycle = each.value.use_transition_lifecycle
-  transition_in_days       = each.value.transition_in_days
-  use_expiration_lifecycle = each.value.use_expiration_lifecycle
-  expiration_in_days       = each.value.expiration_in_days
+  name                  = each.key
+  force_destroy         = each.value.force_destroy
+  use_versioning        = each.value.use_versioning
+  use_logging           = each.value.use_logging
+  log_bucket_name       = data.aws_s3_bucket.log.bucket
+  use_default_lifecycle = each.value.use_default_lifecycle
 }
 
 module "sqs" {

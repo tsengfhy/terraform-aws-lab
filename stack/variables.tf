@@ -45,13 +45,10 @@ variable "jobs" {
 
 variable "buckets" {
   type = map(object({
-    force_destroy            = optional(bool, false)
-    use_versioning           = optional(bool, false)
-    use_logging              = optional(bool, false)
-    use_transition_lifecycle = optional(bool, false)
-    transition_in_days       = optional(number, 30)
-    use_expiration_lifecycle = optional(bool, false)
-    expiration_in_days       = optional(number, 180)
+    force_destroy         = optional(bool, false)
+    use_versioning        = optional(bool, false)
+    use_logging           = optional(bool, false)
+    use_default_lifecycle = optional(bool, false)
   }))
   default = {}
 }

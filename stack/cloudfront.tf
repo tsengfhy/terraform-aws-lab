@@ -21,7 +21,7 @@ module "cloudfront" {
 resource "aws_s3_object" "cloudfront" {
   for_each = var.pages
 
-  bucket       = split(":", module.cloudfront[each.key].s3.arn)[5]
+  bucket       = module.cloudfront[each.key].s3.id
   key          = module.cloudfront[each.key].default_root_object
   source       = "./tests/cloudfront/index.html"
   content_type = "text/html"

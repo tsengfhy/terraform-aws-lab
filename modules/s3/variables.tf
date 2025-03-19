@@ -13,11 +13,6 @@ variable "force_destroy" {
   default = false
 }
 
-variable "object_ownership" {
-  type    = string
-  default = "BucketOwnerEnforced"
-}
-
 variable "use_versioning" {
   type    = bool
   default = false
@@ -33,31 +28,6 @@ variable "kms_alias" {
   default = "alias/aws/s3"
 }
 
-variable "policy_documents" {
-  type    = list(string)
-  default = []
-}
-
-variable "use_transition_lifecycle" {
-  type    = bool
-  default = false
-}
-
-variable "transition_in_days" {
-  type    = number
-  default = 30
-}
-
-variable "use_expiration_lifecycle" {
-  type    = bool
-  default = false
-}
-
-variable "expiration_in_days" {
-  type    = number
-  default = 180
-}
-
 variable "use_logging" {
   type    = bool
   default = false
@@ -71,4 +41,19 @@ variable "log_bucket_name" {
     condition     = !var.use_logging || var.log_bucket_name != null
     error_message = "The log bucket name can not be null if enable logging"
   }
+}
+
+variable "policy_documents" {
+  type    = list(string)
+  default = []
+}
+
+variable "object_ownership" {
+  type    = string
+  default = "BucketOwnerEnforced"
+}
+
+variable "use_default_lifecycle" {
+  type    = bool
+  default = false
 }
