@@ -20,23 +20,28 @@ data "aws_iam_policy_document" "assume" {
   }
 }
 
-resource "aws_iam_role" "task_execution" {
-  count = local.create_ecs || local.create_batch ? 1 : 0
+module "role_task_execution" {
+  count  = local.create_ecs || local.create_batch ? 1 : 0
+  source = "../modules/iam/role"
 
-  name = "${module.context.prefix}-task-execution"
+  workspace = local.workspace
+
+  name = "task-execution"
+  path = "/service-role/"
 
   assume_role_policy = data.aws_iam_policy_document.assume["ecs-tasks"].json
+
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
     "arn:aws:iam::aws:policy/service-role/AWSTransferLoggingAccess",
   ]
 
-  inline_policy {
-    name   = "SecretsManagerReadOnly"
-    policy = data.aws_iam_policy_document.secrets_manager_read_only.json
-  }
-
-  tags = module.context.tags
+  inline_policies = [
+    {
+      name   = "SecretsManagerReadOnly"
+      policy = data.aws_iam_policy_document.secrets_manager_read_only.json
+    }
+  ]
 }
 
 data "aws_iam_policy_document" "secrets_manager_read_only" {
@@ -58,19 +63,23 @@ data "aws_iam_policy_document" "secrets_manager_read_only" {
   }
 }
 
-resource "aws_iam_role" "task" {
-  count = local.create_ecs || local.create_batch ? 1 : 0
+module "role_task" {
+  count  = local.create_ecs || local.create_batch ? 1 : 0
+  source = "../modules/iam/role"
 
-  name = "${module.context.prefix}-task"
+  workspace = local.workspace
+
+  name = "task"
+  path = "/service-role/"
 
   assume_role_policy = data.aws_iam_policy_document.assume["ecs-tasks"].json
 
-  inline_policy {
-    name   = "S3ReadWrite"
-    policy = data.aws_iam_policy_document.s3_read_write.json
-  }
-
-  tags = module.context.tags
+  inline_policies = [
+    {
+      name   = "S3ReadWrite"
+      policy = data.aws_iam_policy_document.s3_read_write.json
+    }
+  ]
 }
 
 data "aws_iam_policy_document" "s3_read_write" {
@@ -97,28 +106,34 @@ data "aws_iam_policy_document" "s3_read_write" {
   }
 }
 
-resource "aws_iam_role" "batch_service" {
-  count = local.create_batch ? 1 : 0
+module "role_batch_service" {
+  count  = local.create_batch ? 1 : 0
+  source = "../modules/iam/role"
 
-  name = "${module.context.prefix}-batch"
+  workspace = local.workspace
+
+  name = "batch"
+  path = "/service-role/"
 
   assume_role_policy = data.aws_iam_policy_document.assume["batch"].json
+
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole",
   ]
-
-  tags = module.context.tags
 }
 
-resource "aws_iam_role" "batch_service_scheduler" {
-  count = local.create_batch ? 1 : 0
+module "role_batch_service_scheduler" {
+  count  = local.create_batch ? 1 : 0
+  source = "../modules/iam/role"
 
-  name = "${module.context.prefix}-batch-scheduler"
+  workspace = local.workspace
+
+  name = "batch-scheduler"
+  path = "/service-role/"
 
   assume_role_policy = data.aws_iam_policy_document.assume["scheduler"].json
+
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AWSBatchServiceEventTargetRole",
   ]
-
-  tags = module.context.tags
 }

@@ -6,7 +6,7 @@ module "batch" {
 
   capacity_provider       = "FARGATE_SPOT"
   subnet_ids              = module.vpc.private_subnets
-  batch_service_role_name = split("/", one(aws_iam_role.batch_service).arn)[1]
+  batch_service_role_name = one(module.role_batch_service).id
 }
 
 module "job" {
@@ -16,13 +16,13 @@ module "job" {
   workspace = local.workspace
 
   name                              = each.key
-  task_execution_role_name          = split("/", one(aws_iam_role.task_execution).arn)[1]
-  task_role_name                    = split("/", one(aws_iam_role.task).arn)[1]
-  ecr_name                          = split("/", module.ecr["batch"].arn)[1]
+  task_execution_role_name          = one(module.role_task_execution).id
+  task_role_name                    = one(module.role_task).id
+  ecr_name                          = module.ecr["batch"].id
   timezone                          = "Asia/Shanghai"
   schedule_expression               = each.value.schedule_expression
-  batch_service_scheduler_role_name = split("/", one(aws_iam_role.batch_service_scheduler).arn)[1]
-  batch_job_queue_name              = split("/", one(module.batch).batch_job_queue_arn)[1]
+  batch_service_scheduler_role_name = one(module.role_batch_service_scheduler).id
+  batch_job_queue_arn               = one(module.batch).batch_job_queue_arn
 
   envs = [
     {

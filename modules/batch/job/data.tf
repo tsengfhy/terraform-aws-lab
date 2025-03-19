@@ -21,7 +21,7 @@ data "aws_iam_role" "batch_service_scheduler" {
 }
 
 data "aws_batch_job_queue" "selected" {
-  name = var.batch_job_queue_name
+  name = split("/", var.batch_job_queue_arn)[1]
 }
 
 data "aws_kms_alias" "log" {
