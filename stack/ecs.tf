@@ -29,9 +29,9 @@ module "service" {
   name                     = each.key
   ecs_cluster_arn          = one(module.ecs).arn
   subnet_ids               = module.vpc.private_subnets
-  task_execution_role_name = split("/", one(aws_iam_role.task_execution).arn)[1]
-  task_role_name           = split("/", one(aws_iam_role.task).arn)[1]
-  ecr_name                 = split("/", module.ecr["ecs"].arn)[1]
+  task_execution_role_name = one(module.role_task_execution).id
+  task_role_name           = one(module.role_task).id
+  ecr_name                 = module.ecr["ecs"].id
   container_port           = each.value.container_port
   health_check             = each.value.health_check
   use_lb                   = true

@@ -1,24 +1,29 @@
 resource "aws_ssm_service_setting" "dhmc" {
   setting_id    = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:servicesetting/ssm/managed-instance/default-ec2-instance-management-role"
-  setting_value = join("/", slice(split("/", aws_iam_role.ssm.arn), 1, length(split("/", aws_iam_role.ssm.arn))))
+  setting_value = join("/", slice(split("/", module.role_ssm.arn), 1, length(split("/", module.role_ssm.arn))))
 }
 
-resource "aws_iam_role" "ssm" {
+module "role_ssm" {
+  source = "../modules/iam/role"
+
+  workspace = local.workspace
+
   name        = "AWSSystemsManagerDefaultEC2InstanceManagementRole"
   description = "AWS Systems Manager Default EC2 Instance Management Role"
-  path        = "/service-role/"
 
+  is_service_linked  = true
   assume_role_policy = data.aws_iam_policy_document.assume["ssm"].json
+
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy",
   ]
 
-  inline_policy {
-    name   = "Logging"
-    policy = data.aws_iam_policy_document.ssm.json
-  }
-
-  tags = module.context.tags
+  inline_policies = [
+    {
+      name   = "Logging"
+      policy = data.aws_iam_policy_document.ssm.json
+    }
+  ]
 }
 
 data "aws_iam_policy_document" "ssm" {

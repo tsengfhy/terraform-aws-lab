@@ -79,7 +79,7 @@ variable "batch_service_scheduler_role_name" {
   nullable = false
 }
 
-variable "batch_job_queue_name" {
+variable "batch_job_queue_arn" {
   type     = string
   nullable = false
 }
