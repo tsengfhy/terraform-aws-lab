@@ -84,17 +84,11 @@ variable "batch_job_queue_arn" {
   nullable = false
 }
 
-variable "log_retention_in_days" {
-  type    = number
-  default = 30
-}
-
-variable "log_kms_alias" {
-  type    = string
-  default = null
-}
-
-variable "log_skip_destroy" {
-  type    = bool
-  default = false
+variable "logging_settings" {
+  type = object({
+    retention_in_days = optional(number, 30)
+    kms_alias         = optional(string)
+    skip_destroy      = optional(bool, false)
+  })
+  default = {}
 }

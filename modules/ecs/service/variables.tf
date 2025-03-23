@@ -89,19 +89,13 @@ variable "health_check_grace_period_seconds" {
   default = null
 }
 
-variable "log_retention_in_days" {
-  type    = number
-  default = 30
-}
-
-variable "log_kms_alias" {
-  type    = string
-  default = null
-}
-
-variable "log_skip_destroy" {
-  type    = bool
-  default = false
+variable "logging_settings" {
+  type = object({
+    retention_in_days = optional(number, 30)
+    kms_alias         = optional(string)
+    skip_destroy      = optional(bool, false)
+  })
+  default = {}
 }
 
 variable "use_lb" {

@@ -16,5 +16,5 @@ data "aws_acm_certificate" "selected" {
 data "aws_s3_bucket" "log" {
   count = var.use_logging ? 1 : 0
 
-  bucket = var.log_bucket_name
+  bucket = var.logging_bucket_name
 }

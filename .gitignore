@@ -4,6 +4,7 @@
 *.tfstate*
 *override.tf*
 *.log
+*.zip
 
 # IntelliJ project files
 .idea

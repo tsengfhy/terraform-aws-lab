@@ -25,7 +25,7 @@ data "aws_batch_job_queue" "selected" {
 }
 
 data "aws_kms_alias" "log" {
-  count = var.log_kms_alias != null ? 1 : 0
+  count = var.logging_settings.kms_alias != null ? 1 : 0
 
-  name = var.log_kms_alias
+  name = var.logging_settings.kms_alias
 }

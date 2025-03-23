@@ -33,13 +33,13 @@ variable "use_logging" {
   default = false
 }
 
-variable "log_bucket_name" {
+variable "logging_bucket_name" {
   type    = string
   default = null
 
   validation {
-    condition     = !var.use_logging || var.log_bucket_name != null
-    error_message = "The log bucket name can not be null if enable logging"
+    condition     = !var.use_logging || var.logging_bucket_name != null
+    error_message = "The logging bucket name can not be null if enable logging"
   }
 }
 

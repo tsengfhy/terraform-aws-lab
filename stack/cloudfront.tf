@@ -4,14 +4,14 @@ module "cloudfront" {
 
   workspace = local.workspace
 
-  name            = each.key
-  use_caching     = false
-  use_dns         = each.value.alias != null && var.domain != null
-  domain          = var.domain
-  alias           = each.value.alias
-  use_logging     = true
-  log_bucket_name = data.aws_s3_bucket.log.bucket
-  enabled         = true
+  name                = each.key
+  use_caching         = false
+  use_dns             = each.value.alias != null && var.domain != null
+  domain              = var.domain
+  alias               = each.value.alias
+  use_logging         = true
+  logging_bucket_name = data.aws_s3_bucket.log.bucket
+  enabled             = true
 
   providers = {
     aws.global = aws.global

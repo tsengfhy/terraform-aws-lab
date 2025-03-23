@@ -8,7 +8,7 @@ module "s3" {
   force_destroy         = each.value.force_destroy
   use_versioning        = each.value.use_versioning
   use_logging           = each.value.use_logging
-  log_bucket_name       = data.aws_s3_bucket.log.bucket
+  logging_bucket_name   = data.aws_s3_bucket.log.bucket
   use_default_lifecycle = each.value.use_default_lifecycle
 }
 

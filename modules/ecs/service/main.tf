@@ -94,12 +94,3 @@ resource "aws_ecs_task_definition" "this" {
 
   tags = module.context.tags
 }
-
-resource "aws_cloudwatch_log_group" "this" {
-  name              = "/aws/${local.service}/${var.workspace}/${var.name}"
-  retention_in_days = var.log_retention_in_days
-  kms_key_id        = try(one(data.aws_kms_alias.log).target_key_arn, null)
-  skip_destroy      = var.log_skip_destroy
-
-  tags = module.context.tags
-}

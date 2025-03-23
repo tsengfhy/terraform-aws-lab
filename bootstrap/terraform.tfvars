@@ -5,5 +5,5 @@ cost_anomaly_amount          = "1"
 
 domain = "tsengfhy.com"
 
-log_bucket_supported_services = ["logging.s3", "cloudtrail"]
-log_bucket_supported_buckets  = ["terraform-backend"]
+logging_bucket_supported_services = ["logging.s3", "cloudtrail"]
+logging_bucket_supported_buckets  = ["terraform-backend"]

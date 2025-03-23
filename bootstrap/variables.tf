@@ -38,12 +38,12 @@ variable "domain" {
   default = null
 }
 
-variable "log_bucket_supported_services" {
+variable "logging_bucket_supported_services" {
   type    = set(string)
   default = ["logging.s3"]
 }
 
-variable "log_bucket_supported_buckets" {
+variable "logging_bucket_supported_buckets" {
   type    = set(string)
   default = []
 }

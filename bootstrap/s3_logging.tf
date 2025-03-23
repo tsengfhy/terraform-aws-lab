@@ -26,19 +26,19 @@ data "aws_iam_policy_document" "log" {
 
     principals {
       type        = "Service"
-      identifiers = formatlist("%s.amazonaws.com", var.log_bucket_supported_services)
+      identifiers = formatlist("%s.amazonaws.com", var.logging_bucket_supported_services)
     }
   }
 }
 
 data "aws_s3_bucket" "selected" {
-  for_each = var.log_bucket_supported_buckets
+  for_each = var.logging_bucket_supported_buckets
 
   bucket = "${module.context.unique_prefix}-${each.key}"
 }
 
 resource "aws_s3_bucket_logging" "backend" {
-  for_each = var.log_bucket_supported_buckets
+  for_each = var.logging_bucket_supported_buckets
 
   bucket = data.aws_s3_bucket.selected[each.key].id
 

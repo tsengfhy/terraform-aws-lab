@@ -14,6 +14,6 @@ variable "capacity_provider" {
 
   validation {
     condition     = can(index(["FARGATE", "FARGATE_SPOT"], var.capacity_provider))
-    error_message = "Just fargate is supported"
+    error_message = "Only fargate is supported"
   }
 }
