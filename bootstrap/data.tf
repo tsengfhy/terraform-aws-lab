@@ -3,6 +3,7 @@ locals {
 
   trusted_services = [
     "ssm",
+    "apigateway",
   ]
 }
 

@@ -1,0 +1,18 @@
+openapi: 3.0.1
+info:
+  title: test
+  version: 1.0.0
+paths:
+  /{proxy+}:
+    x-amazon-apigateway-any-method:
+      parameters:
+      - name: proxy
+        in: path
+        required: true
+        schema:
+          type: string
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: ${uri}
+        timeoutInMillis: 29000

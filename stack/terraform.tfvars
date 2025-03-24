@@ -2,6 +2,12 @@ create_bastion = false
 
 domain = "tsengfhy.com"
 
+apis = {
+  # test = {
+  #   alias = "api"
+  # }
+}
+
 services = {
   #   test = {
   #     container_port = 80

@@ -18,6 +18,13 @@ variable "domain" {
   default = null
 }
 
+variable "apis" {
+  type = map(object({
+    alias = optional(string)
+  }))
+  default = {}
+}
+
 variable "services" {
   type = map(object({
     container_port = number
