@@ -9,23 +9,23 @@ apis = {
 }
 
 services = {
-  #   test = {
-  #     container_port = 80
-  #     path_pattern   = "/*"
-  #     health_check   = "/index.html"
-  #   }
+  # test = {
+  #   container_port = 80
+  #   path_pattern   = "/*"
+  #   health_check   = "/index.html"
+  # }
 }
 
 pages = {
-  #   default = {
-  #     alias = "page"
-  #   }
+  # test = {
+  #   alias = "page"
+  # }
 }
 
 jobs = {
-  #   testJob = {
-  #     schedule_expression = "cron(0 0 * * ? *)"
-  #   }
+  # testJob = {
+  #   schedule_expression = "cron(0 0 * * ? *)"
+  # }
 }
 
 buckets = {

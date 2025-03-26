@@ -6,9 +6,7 @@ locals {
   create_batch      = length(keys(var.jobs)) > 0
 
   computed_repos = merge(
-    local.create_ecs ? {
-      ecs = {}
-    } : {},
+    { for key, value in var.services : "ecs-${key}" => {} },
     local.create_batch ? {
       batch = {}
     } : {}

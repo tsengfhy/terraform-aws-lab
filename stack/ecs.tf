@@ -31,7 +31,7 @@ module "service" {
   subnet_ids               = module.vpc.private_subnets
   task_execution_role_name = one(module.role_task_execution).id
   task_role_name           = one(module.role_task).id
-  ecr_name                 = module.ecr["ecs"].id
+  ecr_name                 = module.ecr["ecs-${each.key}"].id
   container_port           = each.value.container_port
   health_check             = each.value.health_check
   use_lb                   = true

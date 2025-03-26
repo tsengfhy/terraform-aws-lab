@@ -5,7 +5,6 @@ module "s3" {
 
   name             = "cloudfront-orgin-${var.name}"
   force_destroy    = true
-  use_versioning   = true
   use_kms          = false
   policy_documents = [data.aws_iam_policy_document.s3.json]
 }
