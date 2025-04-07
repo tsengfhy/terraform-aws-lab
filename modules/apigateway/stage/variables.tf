@@ -73,6 +73,11 @@ variable "logging_settings" {
   }
 }
 
+variable "use_xray" {
+  type    = bool
+  default = false
+}
+
 variable "domain_name" {
   type    = string
   default = null

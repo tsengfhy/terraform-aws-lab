@@ -159,3 +159,8 @@ variable "logging_settings" {
     error_message = "Only TRACE / DEBUG / INFO / WARN / ERROR / FATAL is supported"
   }
 }
+
+variable "use_xray" {
+  type    = bool
+  default = false
+}

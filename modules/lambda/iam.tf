@@ -15,6 +15,9 @@ module "role" {
     local.use_vpc ? [
       "arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess"
     ] : [],
+    var.use_xray ? [
+      "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+    ] : [],
     var.managed_policy_arns
   )
 

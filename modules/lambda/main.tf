@@ -57,6 +57,14 @@ resource "aws_lambda_function" "this" {
     application_log_level = var.logging_settings.application_level
   }
 
+  dynamic "tracing_config" {
+    for_each = var.use_xray ? [0] : []
+
+    content {
+      mode = "Active"
+    }
+  }
+
   tags = module.context.tags
 
   lifecycle {

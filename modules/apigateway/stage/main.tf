@@ -16,6 +16,7 @@ resource "aws_api_gateway_stage" "this" {
 
   cache_cluster_enabled = local.use_caching
   cache_cluster_size    = var.caching_settings.size
+  xray_tracing_enabled  = var.use_xray
 
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.access.arn
