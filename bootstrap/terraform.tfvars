@@ -7,3 +7,5 @@ domain = "tsengfhy.com"
 
 logging_bucket_supported_services = ["logging.s3", "cloudtrail"]
 logging_bucket_supported_buckets  = ["terraform-backend"]
+
+use_athena = true

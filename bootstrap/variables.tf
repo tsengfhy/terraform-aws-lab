@@ -47,3 +47,8 @@ variable "logging_bucket_supported_buckets" {
   type    = set(string)
   default = []
 }
+
+variable "use_athena" {
+  type    = bool
+  default = false
+}
