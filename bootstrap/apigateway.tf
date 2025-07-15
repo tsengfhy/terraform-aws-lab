@@ -1,6 +1,5 @@
 resource "aws_api_gateway_account" "this" {
   cloudwatch_role_arn = module.role_apigateway.arn
-  reset_on_delete     = true
 }
 
 module "role_apigateway" {

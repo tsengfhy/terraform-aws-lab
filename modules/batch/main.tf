@@ -5,9 +5,9 @@ module "context" {
 }
 
 resource "aws_batch_compute_environment" "this" {
-  compute_environment_name = "${module.context.prefix}-batch-${var.name}"
-  type                     = "MANAGED"
-  service_role             = data.aws_iam_role.batch_service.arn
+  name         = "${module.context.prefix}-batch-${var.name}"
+  type         = "MANAGED"
+  service_role = data.aws_iam_role.batch_service.arn
 
   compute_resources {
     type               = var.capacity_provider
