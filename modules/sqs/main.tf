@@ -10,9 +10,10 @@ resource "aws_sqs_queue" "this" {
   name              = "${module.context.prefix}-queue-${var.name}${local.suffix}"
   kms_master_key_id = var.use_kms ? one(data.aws_kms_alias.selected).name : null
 
-  delay_seconds              = var.delay_seconds
   visibility_timeout_seconds = var.visibility_timeout_seconds
   message_retention_seconds  = var.message_retention_seconds
+  delay_seconds              = var.delay_seconds
+  receive_wait_time_seconds  = var.receive_wait_time_seconds
 
   fifo_queue                  = var.use_fifo
   content_based_deduplication = var.use_fifo
@@ -39,6 +40,8 @@ resource "aws_sqs_queue" "dlq" {
 
   visibility_timeout_seconds = var.visibility_timeout_seconds
   message_retention_seconds  = 1209600
+  delay_seconds              = var.delay_seconds
+  receive_wait_time_seconds  = var.receive_wait_time_seconds
 
   fifo_queue                  = var.use_fifo
   content_based_deduplication = var.use_fifo

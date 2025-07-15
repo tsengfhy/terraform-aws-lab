@@ -63,9 +63,10 @@ variable "buckets" {
 variable "queues" {
   type = map(object({
     use_fifo                   = optional(bool, false)
-    delay_seconds              = optional(number, 0)
     visibility_timeout_seconds = optional(number, 30)
     message_retention_seconds  = optional(number, 345600)
+    delay_seconds              = optional(number, 0)
+    receive_wait_time_seconds  = optional(number, 20)
     use_dlq                    = optional(bool, true)
     max_receive_count          = optional(number, 1)
   }))

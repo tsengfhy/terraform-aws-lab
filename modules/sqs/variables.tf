@@ -23,11 +23,6 @@ variable "use_fifo" {
   default = false
 }
 
-variable "delay_seconds" {
-  type    = number
-  default = 0
-}
-
 variable "visibility_timeout_seconds" {
   type    = number
   default = 30
@@ -36,6 +31,16 @@ variable "visibility_timeout_seconds" {
 variable "message_retention_seconds" {
   type    = number
   default = 345600
+}
+
+variable "delay_seconds" {
+  type    = number
+  default = 0
+}
+
+variable "receive_wait_time_seconds" {
+  type    = number
+  default = 20
 }
 
 variable "use_dlq" {
