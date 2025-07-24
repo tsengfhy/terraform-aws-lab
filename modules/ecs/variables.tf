@@ -14,6 +14,16 @@ variable "capacity_provider" {
 
   validation {
     condition     = can(index(["FARGATE", "FARGATE_SPOT"], var.capacity_provider))
-    error_message = "Only fargate is supported"
+    error_message = "Only FARGATE is supported"
+  }
+}
+
+variable "container_insights" {
+  type    = string
+  default = "disabled"
+
+  validation {
+    condition     = can(index(["enhanced", "enabled", "disabled"], var.container_insights))
+    error_message = "Only enhanced / enabled / disabled is supported"
   }
 }

@@ -15,7 +15,7 @@ resource "aws_api_gateway_stage" "this" {
   variables             = var.variables
 
   cache_cluster_enabled = local.use_caching
-  cache_cluster_size    = var.caching_settings.size
+  cache_cluster_size    = var.caching_config.size
   xray_tracing_enabled  = var.use_xray
 
   access_log_settings {
@@ -55,16 +55,16 @@ resource "aws_api_gateway_method_settings" "this" {
 
   settings {
     caching_enabled                            = local.use_caching
-    cache_data_encrypted                       = var.caching_settings.data_encrypted
-    cache_ttl_in_seconds                       = var.caching_settings.ttl_in_seconds
-    require_authorization_for_cache_control    = var.caching_settings.require_authorization_for_cache_control
-    unauthorized_cache_control_header_strategy = var.caching_settings.unauthorized_cache_control_header_strategy
+    cache_data_encrypted                       = var.caching_config.data_encrypted
+    cache_ttl_in_seconds                       = var.caching_config.ttl_in_seconds
+    require_authorization_for_cache_control    = var.caching_config.require_authorization_for_cache_control
+    unauthorized_cache_control_header_strategy = var.caching_config.unauthorized_cache_control_header_strategy
 
-    throttling_rate_limit  = var.throttling_settings.rate_limit
-    throttling_burst_limit = var.throttling_settings.burst_limit
+    throttling_rate_limit  = var.throttling_config.rate_limit
+    throttling_burst_limit = var.throttling_config.burst_limit
 
-    logging_level      = var.logging_settings.level
-    data_trace_enabled = var.logging_settings.data_trace_enabled
+    logging_level      = var.logging_config.level
+    data_trace_enabled = var.logging_config.data_trace_enabled
   }
 }
 

@@ -5,14 +5,15 @@ module "context" {
 }
 
 resource "aws_ecs_service" "this" {
-  name                   = "${module.context.prefix}-ecs-service-${var.name}"
+  name                   = local.name
   launch_type            = "FARGATE"
   cluster                = data.aws_ecs_cluster.selected.arn
   task_definition        = aws_ecs_task_definition.this.arn
-  desired_count          = var.desired_count
   force_new_deployment   = true
-  enable_execute_command = false
+  enable_execute_command = var.use_execute_command
 
+  desired_count                     = var.desired_count
+  availability_zone_rebalancing     = "ENABLED"
   health_check_grace_period_seconds = var.use_lb ? var.health_check_grace_period_seconds : null
 
   deployment_controller {
@@ -34,7 +35,7 @@ resource "aws_ecs_service" "this" {
 
     content {
       target_group_arn = one(aws_lb_target_group.this).arn
-      container_name   = local.default_container_name
+      container_name   = local.primary_container_name
       container_port   = var.container_port
     }
   }
@@ -53,14 +54,14 @@ resource "aws_ecs_task_definition" "this" {
   family                   = "${module.context.prefix}-ecs-task-${var.name}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  execution_role_arn       = data.aws_iam_role.task_execution.arn
-  task_role_arn            = data.aws_iam_role.task.arn
   cpu                      = var.cpu
   memory                   = var.memory
+  execution_role_arn       = data.aws_iam_role.task_execution.arn
+  task_role_arn            = data.aws_iam_role.task.arn
 
   container_definitions = jsonencode([
     {
-      name        = local.default_container_name
+      name        = local.primary_container_name
       image       = "${data.aws_ecr_repository.selected.repository_url}:${var.ecr_image_tag}"
       environment = var.envs
       secrets     = var.secrets
@@ -75,7 +76,7 @@ resource "aws_ecs_task_definition" "this" {
       ]
 
       healthCheck = {
-        command  = ["CMD-SHELL", "curl -f http://localhost${var.health_check} || exit 1"]
+        command  = ["CMD-SHELL", "curl -f http://localhost:${var.container_port}${var.health_check} || exit 1"]
         interval = 30
         retries  = 3
         timeout  = 5

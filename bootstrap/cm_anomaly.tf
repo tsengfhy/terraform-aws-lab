@@ -7,7 +7,7 @@ resource "aws_ce_anomaly_monitor" "service" {
 }
 
 resource "aws_ce_anomaly_monitor" "workspace" {
-  for_each = var.workspaces
+  for_each = toset(var.workspaces)
 
   name         = "${module.context.prefix}-anomaly-monitor-workspace-${each.key}"
   monitor_type = "CUSTOM"

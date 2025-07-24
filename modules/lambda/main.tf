@@ -5,7 +5,7 @@ module "context" {
 }
 
 resource "aws_lambda_function" "this" {
-  function_name = "${module.context.prefix}-lambda-function-${var.name}"
+  function_name = local.name
   role          = module.role.arn
 
   package_type     = var.image_uri != null ? "Image" : "Zip"
@@ -53,8 +53,8 @@ resource "aws_lambda_function" "this" {
   logging_config {
     log_format            = "JSON"
     log_group             = aws_cloudwatch_log_group.this.name
-    system_log_level      = var.logging_settings.system_level
-    application_log_level = var.logging_settings.application_level
+    system_log_level      = var.logging_config.system_level
+    application_log_level = var.logging_config.application_level
   }
 
   dynamic "tracing_config" {

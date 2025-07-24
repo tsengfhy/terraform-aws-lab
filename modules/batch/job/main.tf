@@ -5,7 +5,7 @@ module "context" {
 }
 
 resource "aws_batch_job_definition" "this" {
-  name                  = "${module.context.prefix}-batch-job-${var.name}"
+  name                  = local.name
   platform_capabilities = ["FARGATE"]
   type                  = "container"
 

@@ -16,7 +16,7 @@ data "aws_vpc" "selected" {
 }
 
 data "aws_subnet" "selected" {
-  for_each = var.subnet_ids
+  for_each = toset(var.subnet_ids)
 
   id = each.value
 }
@@ -25,6 +25,6 @@ data "aws_ec2_managed_prefix_list" "s3" {
   name = "com.amazonaws.${data.aws_region.current.name}.s3"
 }
 
-data "aws_iam_role" "batch_service" {
-  name = var.batch_service_role_name
+data "aws_iam_role" "service" {
+  name = var.service_role_name
 }

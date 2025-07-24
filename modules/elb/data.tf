@@ -18,7 +18,7 @@ data "aws_vpc" "selected" {
 }
 
 data "aws_subnet" "selected" {
-  for_each = var.subnet_ids
+  for_each = toset(var.subnet_ids)
 
   id = each.value
 }

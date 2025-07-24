@@ -1,4 +1,6 @@
 resource "aws_lb_listener_rule" "this" {
+  count = var.use_lb ? 1 : 0
+
   listener_arn = one(data.aws_lb_listener.selected).arn
   priority     = var.priority
 
@@ -12,6 +14,8 @@ resource "aws_lb_listener_rule" "this" {
     type             = "forward"
     target_group_arn = one(aws_lb_target_group.this).arn
   }
+
+  tags = module.context.tags
 }
 
 resource "aws_lb_target_group" "this" {

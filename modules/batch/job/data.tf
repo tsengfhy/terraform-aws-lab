@@ -1,5 +1,6 @@
 locals {
   service = "batch"
+  name    = "${module.context.prefix}-batch-job-${var.name}"
 }
 
 data "aws_region" "current" {}
@@ -16,16 +17,16 @@ data "aws_iam_role" "task" {
   name = var.task_role_name
 }
 
-data "aws_iam_role" "batch_service_scheduler" {
-  name = var.batch_service_scheduler_role_name
+data "aws_iam_role" "scheduler" {
+  name = var.scheduler_role_name
 }
 
 data "aws_batch_job_queue" "selected" {
-  name = split("/", var.batch_job_queue_arn)[1]
+  name = split("/", var.job_queue_arn)[1]
 }
 
 data "aws_kms_alias" "log" {
-  count = var.logging_settings.kms_alias != null ? 1 : 0
+  count = var.logging_config.kms_alias != null ? 1 : 0
 
-  name = var.logging_settings.kms_alias
+  name = var.logging_config.kms_alias
 }

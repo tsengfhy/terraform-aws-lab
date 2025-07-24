@@ -39,7 +39,7 @@ variable "assume_role_policy" {
 }
 
 variable "managed_policy_arns" {
-  type    = set(string)
+  type    = list(string)
   default = []
 }
 

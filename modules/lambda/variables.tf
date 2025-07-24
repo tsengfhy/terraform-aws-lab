@@ -139,7 +139,7 @@ variable "maximum_retry_attempts" {
   default = 2
 }
 
-variable "logging_settings" {
+variable "logging_config" {
   type = object({
     retention_in_days = optional(number, 30)
     kms_alias         = optional(string)
@@ -150,12 +150,12 @@ variable "logging_settings" {
   default = {}
 
   validation {
-    condition     = can(index(["DEBUG", "INFO", "WARN"], var.logging_settings.system_level))
+    condition     = can(index(["DEBUG", "INFO", "WARN"], var.logging_config.system_level))
     error_message = "Only DEBUG / INFO / WARN is supported"
   }
 
   validation {
-    condition     = can(index(["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"], var.logging_settings.application_level))
+    condition     = can(index(["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"], var.logging_config.application_level))
     error_message = "Only TRACE / DEBUG / INFO / WARN / ERROR / FATAL is supported"
   }
 }

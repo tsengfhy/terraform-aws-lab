@@ -15,13 +15,13 @@ resource "aws_cloudfront_distribution" "this" {
   wait_for_deployment = true
 
   origin {
-    origin_id                = local.default_origin_id
+    origin_id                = local.primary_origin_id
     domain_name              = data.aws_s3_bucket.this.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.this.id
   }
 
   default_cache_behavior {
-    target_origin_id       = local.default_origin_id
+    target_origin_id       = local.primary_origin_id
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
     viewer_protocol_policy = "redirect-to-https"

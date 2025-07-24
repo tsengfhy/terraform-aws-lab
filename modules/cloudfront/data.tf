@@ -1,5 +1,5 @@
 locals {
-  default_origin_id = "default"
+  primary_origin_id = "primary"
 }
 
 data "aws_caller_identity" "current" {}

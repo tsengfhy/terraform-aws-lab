@@ -19,7 +19,7 @@ variable "workspace_tag_key" {
 }
 
 variable "workspaces" {
-  type    = set(string)
+  type    = list(string)
   default = []
 }
 
@@ -39,12 +39,12 @@ variable "domain" {
 }
 
 variable "logging_bucket_supported_services" {
-  type    = set(string)
+  type    = list(string)
   default = ["logging.s3"]
 }
 
 variable "logging_bucket_supported_buckets" {
-  type    = set(string)
+  type    = list(string)
   default = []
 }
 

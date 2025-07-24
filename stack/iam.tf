@@ -106,7 +106,7 @@ data "aws_iam_policy_document" "s3_read_write" {
   }
 }
 
-module "role_batch_service" {
+module "role_batch" {
   count  = local.create_batch ? 1 : 0
   source = "../modules/iam/role"
 
@@ -122,7 +122,7 @@ module "role_batch_service" {
   ]
 }
 
-module "role_batch_service_scheduler" {
+module "role_batch_scheduler" {
   count  = local.create_batch ? 1 : 0
   source = "../modules/iam/role"
 

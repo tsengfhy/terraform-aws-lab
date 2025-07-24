@@ -19,8 +19,8 @@ resource "aws_sesv2_configuration_set" "this" {
 }
 
 resource "aws_sesv2_configuration_set_event_destination" "this" {
+  event_destination_name = "primary"
   configuration_set_name = aws_sesv2_configuration_set.this.configuration_set_name
-  event_destination_name = "default"
 
   event_destination {
     enabled              = true

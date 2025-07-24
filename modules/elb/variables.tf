@@ -29,7 +29,7 @@ variable "use_ipv6" {
 }
 
 variable "subnet_ids" {
-  type     = set(string)
+  type     = list(string)
   nullable = false
 }
 
@@ -117,6 +117,6 @@ variable "action" {
 }
 
 variable "forwarded_ports" {
-  type    = set(number)
+  type    = list(number)
   default = []
 }

@@ -8,6 +8,16 @@ variable "name" {
   nullable = false
 }
 
+variable "vcpu" {
+  type    = string
+  default = "0.25"
+}
+
+variable "memory" {
+  type    = string
+  default = "512"
+}
+
 variable "task_execution_role_name" {
   type     = string
   nullable = false
@@ -44,16 +54,6 @@ variable "secrets" {
   default = []
 }
 
-variable "vcpu" {
-  type    = string
-  default = "0.25"
-}
-
-variable "memory" {
-  type    = string
-  default = "512"
-}
-
 variable "attempt_duration_seconds" {
   type    = number
   default = 300
@@ -74,17 +74,17 @@ variable "enabled" {
   default = false
 }
 
-variable "batch_service_scheduler_role_name" {
+variable "scheduler_role_name" {
   type     = string
   nullable = false
 }
 
-variable "batch_job_queue_arn" {
+variable "job_queue_arn" {
   type     = string
   nullable = false
 }
 
-variable "logging_settings" {
+variable "logging_config" {
   type = object({
     retention_in_days = optional(number, 30)
     kms_alias         = optional(string)

@@ -13,19 +13,34 @@ variable "ecs_cluster_arn" {
   nullable = false
 }
 
+variable "use_execute_command" {
+  type    = bool
+  default = false
+}
+
 variable "desired_count" {
   type    = number
   default = 1
 }
 
 variable "subnet_ids" {
-  type     = set(string)
+  type     = list(string)
   nullable = false
 }
 
 variable "security_group_ids" {
   type    = list(string)
   default = []
+}
+
+variable "cpu" {
+  type    = number
+  default = 256
+}
+
+variable "memory" {
+  type    = number
+  default = 512
 }
 
 variable "task_execution_role_name" {
@@ -64,16 +79,6 @@ variable "secrets" {
   default = []
 }
 
-variable "cpu" {
-  type    = number
-  default = 256
-}
-
-variable "memory" {
-  type    = number
-  default = 512
-}
-
 variable "container_port" {
   type     = number
   nullable = false
@@ -86,10 +91,10 @@ variable "health_check" {
 
 variable "health_check_grace_period_seconds" {
   type    = number
-  default = null
+  default = 0
 }
 
-variable "logging_settings" {
+variable "logging_config" {
   type = object({
     retention_in_days = optional(number, 30)
     kms_alias         = optional(string)

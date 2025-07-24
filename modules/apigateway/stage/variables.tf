@@ -33,7 +33,7 @@ variable "variables" {
   default = {}
 }
 
-variable "caching_settings" {
+variable "caching_config" {
   type = object({
     size                                       = optional(number)
     data_encrypted                             = optional(bool, false)
@@ -44,12 +44,12 @@ variable "caching_settings" {
   default = {}
 
   validation {
-    condition     = can(index(["FAIL_WITH_403", "SUCCEED_WITH_RESPONSE_HEADER", "SUCCEED_WITHOUT_RESPONSE_HEADER"], var.caching_settings.unauthorized_cache_control_header_strategy))
+    condition     = can(index(["FAIL_WITH_403", "SUCCEED_WITH_RESPONSE_HEADER", "SUCCEED_WITHOUT_RESPONSE_HEADER"], var.caching_config.unauthorized_cache_control_header_strategy))
     error_message = "Only FAIL_WITH_403 / SUCCEED_WITH_RESPONSE_HEADER / SUCCEED_WITHOUT_RESPONSE_HEADER is supported"
   }
 }
 
-variable "throttling_settings" {
+variable "throttling_config" {
   type = object({
     rate_limit  = optional(number, -1)
     burst_limit = optional(number, -1)
@@ -57,7 +57,7 @@ variable "throttling_settings" {
   default = {}
 }
 
-variable "logging_settings" {
+variable "logging_config" {
   type = object({
     retention_in_days  = optional(number, 30)
     kms_alias          = optional(string)
@@ -68,7 +68,7 @@ variable "logging_settings" {
   default = {}
 
   validation {
-    condition     = can(index(["OFF", "ERROR", "INFO"], var.logging_settings.level))
+    condition     = can(index(["OFF", "ERROR", "INFO"], var.logging_config.level))
     error_message = "Only OFF / ERROR / INFO is supported"
   }
 }
