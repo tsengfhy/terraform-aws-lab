@@ -6,9 +6,20 @@ locals {
   create_batch      = length(keys(var.jobs)) > 0
 
   computed_repos = merge(
-    { for key, value in var.services : "ecs-${key}" => {} },
+    { for key, value in var.services : "ecs-${key}" => {
+      type           = "ECS"
+      original_key   = key
+      repo_name      = value.repo_name
+      branch_name    = value.branch_name
+      container_name = "primary"
+      container_port = value.container_port
+    } },
     local.create_batch ? {
-      batch = {}
+      batch = {
+        type        = "Batch"
+        repo_name   = var.job_config.repo_name
+        branch_name = var.job_config.branch_name
+      }
     } : {}
   )
   repos = { for key, value in local.computed_repos : key => merge({

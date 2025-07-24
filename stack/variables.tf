@@ -18,6 +18,11 @@ variable "domain" {
   default = null
 }
 
+variable "notification_email_addresses" {
+  type    = list(string)
+  default = []
+}
+
 variable "apis" {
   type = map(object({
     alias = optional(string)
@@ -32,6 +37,9 @@ variable "services" {
     priority       = optional(number)
     path_pattern   = string
     stickiness     = optional(bool, false)
+
+    repo_name   = optional(string)
+    branch_name = optional(string)
   }))
   default = {}
 }
@@ -40,6 +48,14 @@ variable "pages" {
   type = map(object({
     alias = optional(string)
   }))
+  default = {}
+}
+
+variable "job_config" {
+  type = object({
+    repo_name   = optional(string)
+    branch_name = optional(string)
+  })
   default = {}
 }
 
@@ -71,4 +87,14 @@ variable "queues" {
     max_receive_count          = optional(number, 1)
   }))
   default = {}
+}
+
+variable "create_codepipeline" {
+  type    = bool
+  default = false
+}
+
+variable "artifact_bucket_key" {
+  type    = string
+  default = null
 }

@@ -23,6 +23,29 @@ variable "desired_count" {
   default = 1
 }
 
+variable "deployment_config" {
+  type = object({
+    strategy                = optional(string, "ROLLING")
+    minimum_healthy_percent = optional(number, 100)
+    maximum_percent         = optional(number, 200)
+    bake_time_in_minutes    = optional(number, 15)
+  })
+  default = {}
+
+  validation {
+    condition     = can(index(["ROLLING", "BLUE_GREEN"], var.deployment_config.strategy))
+    error_message = "Only ROLLING / BLUE_GREEN is supported"
+  }
+}
+
+variable "deployment_circuit_breaker" {
+  type = object({
+    enable   = optional(bool, true)
+    rollback = optional(bool, true)
+  })
+  default = {}
+}
+
 variable "subnet_ids" {
   type     = list(string)
   nullable = false
@@ -134,6 +157,11 @@ variable "path_pattern" {
 }
 
 variable "stickiness" {
+  type    = bool
+  default = false
+}
+
+variable "use_codedeploy" {
   type    = bool
   default = false
 }

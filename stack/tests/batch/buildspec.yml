@@ -1,0 +1,12 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - ls -al
+  build:
+    commands:
+  post_build:
+    commands:
+artifacts:
+  files:
+    - Dockerfile

@@ -1,0 +1,22 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - ls -al
+  build:
+    commands:
+  post_build:
+    commands:
+      - echo generate appspec.yaml
+      - sed -i "s/<CONTAINER_NAME>/${CONTAINER_NAME}/g" appspec.yaml
+      - sed -i "s/<CONTAINER_PORT>/${CONTAINER_PORT}/g" appspec.yaml
+      - cat appspec.yaml
+
+      - echo generate taskdef.json
+      - aws ecs describe-task-definition --task-definition ${TASK_DEFINITION_NAME} | jq --arg image "${ECR_REPOSITORY_URL}:${COMMIT_ID}" '.taskDefinition | .containerDefinitions[0].image = $image' > taskdef.json
+      - cat taskdef.json
+artifacts:
+  files:
+    - Dockerfile
+    - appspec.yaml
+    - taskdef.json

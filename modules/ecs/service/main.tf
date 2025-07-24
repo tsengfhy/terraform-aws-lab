@@ -17,12 +17,28 @@ resource "aws_ecs_service" "this" {
   health_check_grace_period_seconds = var.use_lb ? var.health_check_grace_period_seconds : null
 
   deployment_controller {
-    type = "ECS"
+    type = var.use_codedeploy ? "CODE_DEPLOY" : "ECS"
   }
 
-  deployment_circuit_breaker {
-    enable   = true
-    rollback = true
+  dynamic "deployment_configuration" {
+    for_each = !var.use_codedeploy ? [0] : []
+
+    content {
+      strategy             = var.deployment_config.strategy
+      bake_time_in_minutes = var.deployment_config.strategy == "BLUE_GREEN" ? var.deployment_config.bake_time_in_minutes : null
+    }
+  }
+
+  deployment_minimum_healthy_percent = !var.use_codedeploy && var.deployment_config.strategy == "ROLLING" ? var.deployment_config.minimum_healthy_percent : null
+  deployment_maximum_percent         = !var.use_codedeploy && var.deployment_config.strategy == "ROLLING" ? var.deployment_config.maximum_percent : null
+
+  dynamic "deployment_circuit_breaker" {
+    for_each = !var.use_codedeploy ? [0] : []
+
+    content {
+      enable   = var.deployment_circuit_breaker.enable
+      rollback = var.deployment_circuit_breaker.rollback
+    }
   }
 
   network_configuration {
@@ -34,7 +50,7 @@ resource "aws_ecs_service" "this" {
     for_each = var.use_lb ? [0] : []
 
     content {
-      target_group_arn = one(aws_lb_target_group.this).arn
+      target_group_arn = aws_lb_target_group.this["blue"].arn
       container_name   = local.primary_container_name
       container_port   = var.container_port
     }
@@ -46,7 +62,11 @@ resource "aws_ecs_service" "this" {
   tags = module.context.tags
 
   lifecycle {
-    ignore_changes = [desired_count]
+    ignore_changes = [
+      task_definition,
+      desired_count,
+      load_balancer,
+    ]
   }
 }
 

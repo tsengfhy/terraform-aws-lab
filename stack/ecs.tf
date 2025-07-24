@@ -28,6 +28,7 @@ module "service" {
 
   name                     = each.key
   ecs_cluster_arn          = one(module.ecs).arn
+  use_codedeploy           = var.create_codepipeline
   subnet_ids               = module.vpc.private_subnets
   task_execution_role_name = one(module.role_task_execution).id
   task_role_name           = one(module.role_task).id
