@@ -31,7 +31,7 @@ resource "local_file" "backend_config" {
   file_permission = "0644"
 
   content = templatefile("${path.module}/resources/backend-config.tfvars.tpl", {
-    region = data.aws_region.current.name
+    region = data.aws_region.current.region
     bucket = module.backend.id
   })
 }

@@ -30,7 +30,7 @@ resource "aws_budgets_budget" "usage_bandwidth" {
   cost_filter {
     name = "UsageType"
     values = [
-      "${join("", [for item in split("-", data.aws_region.current.name) : upper(substr(item, 0, length(item) == 2 ? 2 : 1))])}-DataTransfer-Out-Bytes",
+      "${join("", [for item in split("-", data.aws_region.current.region) : upper(substr(item, 0, length(item) == 2 ? 2 : 1))])}-DataTransfer-Out-Bytes",
     ]
   }
 

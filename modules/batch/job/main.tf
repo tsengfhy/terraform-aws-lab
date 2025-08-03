@@ -30,7 +30,7 @@ resource "aws_batch_job_definition" "this" {
     logConfiguration = {
       logDriver = "awslogs"
       options = {
-        awslogs-region        = data.aws_region.current.name
+        awslogs-region        = data.aws_region.current.region
         awslogs-group         = aws_cloudwatch_log_group.this.name
         awslogs-stream-prefix = local.service
       }

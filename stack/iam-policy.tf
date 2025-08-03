@@ -27,17 +27,17 @@ data "aws_iam_policy_document" "secrets_manager_read_only" {
   statement {
     effect    = "Allow"
     actions   = ["secretsmanager:GetSecretValue"]
-    resources = ["arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:*"]
+    resources = ["arn:aws:secretsmanager:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:secret:*"]
   }
 
   statement {
     effect    = "Allow"
     actions   = ["kms:Decrypt"]
-    resources = ["arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:key/*"]
+    resources = ["arn:aws:kms:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:key/*"]
     condition {
       test     = "StringLike"
       variable = "kms:ViaService"
-      values   = ["secretsmanager.${data.aws_region.current.name}.amazonaws.com"]
+      values   = ["secretsmanager.${data.aws_region.current.region}.amazonaws.com"]
     }
   }
 }
@@ -73,11 +73,11 @@ data "aws_iam_policy_document" "s3_read_write" {
       "kms:Decrypt",
       "kms:GenerateDataKey",
     ]
-    resources = ["arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:key/*"]
+    resources = ["arn:aws:kms:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:key/*"]
     condition {
       test     = "StringLike"
       variable = "kms:ViaService"
-      values   = ["s3.${data.aws_region.current.name}.amazonaws.com"]
+      values   = ["s3.${data.aws_region.current.region}.amazonaws.com"]
     }
   }
 }
@@ -90,7 +90,7 @@ data "aws_iam_policy_document" "codeconnections" {
       "codestar-connections:UseConnection",
     ]
     resources = [
-      "arn:aws:codeconnections:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:connection/*",
+      "arn:aws:codeconnections:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:connection/*",
     ]
   }
 }
@@ -149,7 +149,7 @@ data "aws_iam_policy_document" "codepipeline" {
       "ecs:RegisterTaskDefinition",
     ]
     resources = [
-      "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/*"
+      "arn:aws:ecs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:task-definition/*"
     ]
   }
 

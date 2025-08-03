@@ -31,7 +31,7 @@ resource "aws_route53_record" "mx" {
   name    = var.mail_from_alias
   type    = "MX"
   ttl     = 300
-  records = ["10 feedback-smtp.${data.aws_region.current.name}.amazonses.com"]
+  records = ["10 feedback-smtp.${data.aws_region.current.region}.amazonses.com"]
 }
 
 resource "aws_route53_record" "dmarc" {
