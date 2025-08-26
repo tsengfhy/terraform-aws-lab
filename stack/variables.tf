@@ -25,7 +25,8 @@ variable "notification_email_addresses" {
 
 variable "apis" {
   type = map(object({
-    alias = optional(string)
+    alias        = optional(string)
+    use_function = optional(bool, false)
   }))
   default = {}
 }

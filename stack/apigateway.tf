@@ -7,9 +7,11 @@ module "apigateway" {
   name = each.key
   type = "REGIONAL"
 
-  body = templatefile("${path.module}/tests/apigateway/test.yml", {
-    uri = module.lambda[each.key].invoke_arn
-  })
+  body = templatefile("${path.module}/tests/apigateway/${each.key}.yml", merge(
+    each.value.use_function ? {
+      uri = module.lambda[each.key].invoke_arn
+    } : {}
+  ))
 
   disable_execute_api_endpoint = var.domain != null
 }
@@ -105,19 +107,19 @@ module "domain" {
 }
 
 module "lambda" {
-  for_each = var.apis
+  for_each = { for key, value in var.apis : key => value if value.use_function }
   source   = "../modules/lambda"
 
   workspace = local.workspace
 
   name     = "apigateway-${each.key}"
-  filename = one(data.archive_file.lambda).output_path
+  filename = data.archive_file.lambda[each.key].output_path
   runtime  = "nodejs22.x"
   handler  = "index.handler"
 }
 
 resource "aws_lambda_permission" "this" {
-  for_each = var.apis
+  for_each = { for key, value in var.apis : key => value if value.use_function }
 
   statement_id  = "AllowAPIGateway"
   action        = "lambda:InvokeFunction"
@@ -127,9 +129,9 @@ resource "aws_lambda_permission" "this" {
 }
 
 data "archive_file" "lambda" {
-  count = local.create_apigateway ? 1 : 0
+  for_each = { for key, value in var.apis : key => value if value.use_function }
 
   type        = "zip"
-  source_file = "${path.module}/tests/lambda/index.mjs"
-  output_path = "${path.module}/tests/lambda/index.zip"
+  source_file = "${path.module}/tests/lambda/${each.key}.mjs"
+  output_path = "${path.module}/tests/lambda/${each.key}.zip"
 }

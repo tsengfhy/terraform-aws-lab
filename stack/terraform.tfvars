@@ -7,6 +7,7 @@ notification_email_addresses = ["tsengfhy@gmail.com"]
 apis = {
   # test = {
   #   alias = "api"
+  #   use_function = true
   # }
 }
 

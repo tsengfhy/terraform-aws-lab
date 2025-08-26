@@ -1,9 +1,8 @@
 locals {
   workspace = terraform.workspace
 
-  create_apigateway = length(keys(var.apis)) > 0
-  create_ecs        = length(keys(var.services)) > 0
-  create_batch      = length(keys(var.jobs)) > 0
+  create_ecs   = length(keys(var.services)) > 0
+  create_batch = length(keys(var.jobs)) > 0
 
   computed_repos = merge(
     { for key, value in var.services : "ecs-${key}" => {
