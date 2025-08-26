@@ -38,6 +38,12 @@ jobs = {
   # }
 }
 
+state_machines = {
+  # test = {
+  #   use_notification = true
+  # }
+}
+
 buckets = {
   artifact = {
     force_destroy         = true

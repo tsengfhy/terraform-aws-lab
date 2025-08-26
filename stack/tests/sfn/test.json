@@ -1,0 +1,42 @@
+{
+  "QueryLanguage": "JSONata",
+  "StartAt": "Init",
+  "States": {
+    "Init": {
+      "Type": "Pass",
+      "Next": "If Send Notification",
+      "Output": {
+        "send_notification": "{% $exists($states.input.send_notification) ? $states.input.send_notification : false %}",
+        "timer_seconds": "{% $exists($states.input.timer_seconds) ? $states.input.timer_seconds : 5 %}",
+        "message": "{% $exists($states.input.message) ? $states.input.message : \"This is a test notification\" %}"
+      }
+    },
+    "If Send Notification": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Next": "Wait",
+          "Condition": "{% $states.input.send_notification %}"
+        }
+      ],
+      "Default": "Fail"
+    },
+    "Fail": {
+      "Type": "Fail"
+    },
+    "Wait": {
+      "Type": "Wait",
+      "Seconds": "{% $states.input.timer_seconds %}",
+      "Next": "Send Notification"
+    },
+    "Send Notification": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Arguments": {
+        "TopicArn": "${notificationArn}",
+        "Message": "{% $states.input.message %}"
+      },
+      "End": true
+    }
+  }
+}

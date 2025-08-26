@@ -82,6 +82,14 @@ data "aws_iam_policy_document" "s3_read_write" {
   }
 }
 
+data "aws_iam_policy_document" "sns_write_only" {
+  statement {
+    effect    = "Allow"
+    actions   = ["sns:Publish"]
+    resources = ["arn:aws:sns:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+}
+
 data "aws_iam_policy_document" "codeconnections" {
   statement {
     effect = "Allow"

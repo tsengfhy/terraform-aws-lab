@@ -66,6 +66,13 @@ variable "jobs" {
   default = {}
 }
 
+variable "state_machines" {
+  type = map(object({
+    use_notification = optional(bool, false)
+  }))
+  default = {}
+}
+
 variable "buckets" {
   type = map(object({
     force_destroy         = optional(bool, false)
