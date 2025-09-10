@@ -61,3 +61,5 @@ queues = {
 
 create_codepipeline = false
 artifact_bucket_key = "artifact"
+
+create_waf = false

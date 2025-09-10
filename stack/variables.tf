@@ -106,3 +106,8 @@ variable "artifact_bucket_key" {
   type    = string
   default = null
 }
+
+variable "create_waf" {
+  type    = bool
+  default = false
+}
