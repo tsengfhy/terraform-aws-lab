@@ -3,6 +3,10 @@ locals {
   name    = "${module.context.prefix}-sfn-${var.name}"
 }
 
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
 data "aws_kms_alias" "log" {
   count = var.logging_config.kms_alias != null ? 1 : 0
 

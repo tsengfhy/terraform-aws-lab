@@ -6,3 +6,37 @@ resource "aws_cloudwatch_log_group" "this" {
 
   tags = module.context.tags
 }
+
+resource "aws_cloudwatch_log_resource_policy" "this" {
+
+  policy_name     = "/aws/${local.service}/${local.name}"
+  policy_document = data.aws_iam_policy_document.log_group.json
+}
+
+data "aws_iam_policy_document" "log_group" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+    resources = ["${aws_cloudwatch_log_group.this.arn}:log-stream:*"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["delivery.logs.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+      values   = ["arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:*"]
+    }
+  }
+}

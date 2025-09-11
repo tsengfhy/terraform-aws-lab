@@ -45,7 +45,6 @@ data "aws_iam_policy_document" "logging" {
       "logs:ListLogDeliveries",
       "logs:*LogDelivery",
       "logs:DescribeResourcePolicies",
-      "logs:PutResourcePolicy",
       "logs:DescribeLogGroups",
       "logs:CreateLogStream",
       "logs:PutLogEvents",

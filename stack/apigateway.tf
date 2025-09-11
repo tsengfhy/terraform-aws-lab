@@ -115,7 +115,7 @@ module "lambda" {
   name     = "apigateway-${each.key}"
   filename = data.archive_file.lambda[each.key].output_path
   runtime  = "nodejs22.x"
-  handler  = "index.handler"
+  handler  = "${each.key}.handler"
 }
 
 resource "aws_lambda_permission" "this" {

@@ -34,41 +34,41 @@ resource "aws_lb_listener" "this" {
   alpn_policy       = local.protocol == "TLS" ? "HTTP2Preferred" : null
 
   dynamic "default_action" {
-    for_each = var.action.type == "forward" ? [0] : []
+    for_each = var.default_action.type == "forward" ? [0] : []
 
     content {
       type             = "forward"
-      target_group_arn = var.action.target_group_arn
+      target_group_arn = var.default_action.target_group_arn
     }
   }
 
   dynamic "default_action" {
-    for_each = var.action.type == "redirect" ? [0] : []
+    for_each = var.default_action.type == "redirect" ? [0] : []
 
     content {
       type = "redirect"
 
       redirect {
-        status_code = var.action.status_code
-        protocol    = var.action.protocol
-        host        = var.action.host
-        port        = var.action.port
-        path        = var.action.path
-        query       = var.action.query
+        status_code = var.default_action.status_code
+        protocol    = var.default_action.protocol
+        host        = var.default_action.host
+        port        = var.default_action.port
+        path        = var.default_action.path
+        query       = var.default_action.query
       }
     }
   }
 
   dynamic "default_action" {
-    for_each = var.action.type == "fixed-response" ? [0] : []
+    for_each = var.default_action.type == "fixed-response" ? [0] : []
 
     content {
       type = "fixed-response"
 
       fixed_response {
-        status_code  = var.action.status_code
-        content_type = var.action.content_type
-        message_body = var.action.message_body
+        status_code  = var.default_action.status_code
+        content_type = var.default_action.content_type
+        message_body = var.default_action.message_body
       }
     }
   }

@@ -78,7 +78,7 @@ variable "alias" {
   }
 }
 
-variable "action" {
+variable "default_action" {
   type = object({
     type             = string
     status_code      = optional(string)
@@ -106,12 +106,12 @@ variable "action" {
   }
 
   validation {
-    condition     = can(index(["forward", "redirect", "fixed-response"], var.action.type))
+    condition     = can(index(["forward", "redirect", "fixed-response"], var.default_action.type))
     error_message = "Action type is not supported"
   }
 
   validation {
-    condition     = var.action.type != "forward" || var.action.target_group_arn != null
+    condition     = var.default_action.type != "forward" || var.default_action.target_group_arn != null
     error_message = "Target group arn can not be null if type is 'forward'"
   }
 }
